@@ -1,60 +1,50 @@
-"use server";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
-import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+// Wklejamy typ bezpośrednio tutaj - zero importów, zero szukania plików
+export type Database = {
+  public: {
+    Tables: {
+      profiles: {
+        Row: { id: string; is_admin: boolean; is_shadowbanned: boolean };
+        Insert: { id: string; is_admin?: boolean; is_shadowbanned?: boolean };
+        Update: { id?: string; is_admin?: boolean; is_shadowbanned?: boolean };
+      };
+      projects: {
+        Row: { id: string; is_shadowbanned: boolean };
+        Insert: { id: string; is_shadowbanned?: boolean };
+        Update: { id?: string; is_shadowbanned?: boolean };
+      };
+    };
+  };
+};
 
-async function assertAdmin() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+export function createClient() {
+  const cookieStore = cookies();
 
-  if (!user) throw new Error("Musisz być zalogowany.");
-  
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("is_admin")
-    .eq("id", user.id)
-    .single();
-
-  if (!profile?.is_admin) throw new Error("Brak uprawnień administratora.");
-
-  return supabase;
-}
-
-export async function setProfileShadowban(profileId: string, shadowbanned: boolean) {
-  const supabase = await assertAdmin();
-  
-  const { error } = await supabase
-    .from("profiles")
-    .update({ is_shadowbanned: shadowbanned })
-    .eq("id", profileId);
-
-  if (error) throw new Error("Nie udało się zaktualizować profilu.");
-  revalidatePath("/admin");
-}
-
-export async function deleteProfile(profileId: string) {
-  const supabase = await assertAdmin();
-  const { error } = await supabase.from("profiles").delete().eq("id", profileId);
-
-  if (error) throw new Error("Nie udało się usunąć profilu.");
-  revalidatePath("/admin");
-}
-
-export async function setProjectShadowban(projectId: string, shadowbanned: boolean) {
-  const supabase = await assertAdmin();
-  const { error } = await supabase
-    .from("projects")
-    .update({ is_shadowbanned: shadowbanned })
-    .eq("id", projectId);
-
-  if (error) throw new Error("Nie udało się zaktualizować projektu.");
-  revalidatePath("/admin");
-}
-
-export async function deleteProject(projectId: string) {
-  const supabase = await assertAdmin();
-  const { error } = await supabase.from("projects").delete().eq("id", projectId);
-
-  if (error) throw new Error("Nie udało się usunąć projektu.");
-  revalidatePath("/admin");
+  return createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          try {
+            cookieStore.set({ name, value, ...options });
+          } catch {
+            // Ignoruj w Server Components
+          }
+        },
+        remove(name: string, options: CookieOptions) {
+          try {
+            cookieStore.set({ name, value: "", ...options });
+          } catch {
+            // Ignoruj w Server Components
+          }
+        },
+      },
+    }
+  );
 }
