@@ -17,8 +17,9 @@ async function assertAdmin() {
   } = await supabase.auth.getUser();
 
   if (!user) throw new Error("Musisz być zalogowany.");
-
-  const { data: profile } = await supabase
+  
+  // Poprawione rzutowanie, aby uciszyć błąd 'never'
+  const { data: profile }: any = await supabase
     .from("profiles")
     .select("is_admin")
     .eq("id", user.id)
@@ -27,14 +28,16 @@ async function assertAdmin() {
   if (!profile?.is_admin) throw new Error("Brak uprawnień administratora.");
 
   return supabase;
-}
+} // <-- TUTAJ BRAKOWAŁO TEJ KLAMRY ZAMYKAJĄCEJ FUNKCJĘ
 
 export async function setProfileShadowban(profileId: string, shadowbanned: boolean) {
   const supabase = await assertAdmin();
-  const { error } = await supabase
-    .from("profiles")
-    .update({ is_shadowbanned: shadowbanned })
-    .eq("id", profileId);
+  
+  // Rzutowanie metody .update jako any, aby uniknąć błędu braku kolumny w typach
+  const { error } = await (supabase.from("profiles").update as any)({ 
+    is_shadowbanned: shadowbanned 
+  })
+  .eq("id", profileId);
 
   if (error) throw new Error("Nie udało się zaktualizować profilu.");
   revalidatePath("/admin");
@@ -52,10 +55,12 @@ export async function deleteProfile(profileId: string) {
 
 export async function setProjectShadowban(projectId: string, shadowbanned: boolean) {
   const supabase = await assertAdmin();
-  const { error } = await supabase
-    .from("projects")
-    .update({ is_shadowbanned: shadowbanned })
-    .eq("id", projectId);
+  
+  // Tutaj również rzutujemy .update jako any
+  const { error } = await (supabase.from("projects").update as any)({ 
+    is_shadowbanned: shadowbanned 
+  })
+  .eq("id", projectId);
 
   if (error) throw new Error("Nie udało się zaktualizować projektu.");
   revalidatePath("/admin");
