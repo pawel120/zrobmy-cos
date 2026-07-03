@@ -51,7 +51,7 @@ export default function SettingsPage() {
       setProfile(p);
       setDisplayName(p.display_name);
       setFaculty(p.faculty ?? "");
-      setBio(p.bio);
+      setBio(p.bio ?? "");
       setSkillsHave(p.skills_have.join(", "));
       setSkillsWant(p.skills_want.join(", "));
       setAvatarUrl(p.avatar_url);
