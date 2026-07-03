@@ -3,23 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
-// Every mutation here still goes through Supabase RLS — the `admin_full_*`
-// policies in schema.sql only allow writes when auth.uid() maps to a
-// profiles row with is_admin = true. A non-admin calling these directly
-// (e.g. by forging a request) gets a Postgres permission error, not data
-// access. The is_admin() check below is a fast, friendly UX guard on top
-// of that real boundary, not a replacement for it.
-
 async function assertAdmin() {
   const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) throw new Error("Musisz być zalogowany.");
   
-  // Poprawione rzutowanie, aby uciszyć błąd 'never'
-  const { data: profile }: any = await supabase
+  const { data: profile } = await supabase
     .from("profiles")
     .select("is_admin")
     .eq("id", user.id)
@@ -28,16 +18,15 @@ async function assertAdmin() {
   if (!profile?.is_admin) throw new Error("Brak uprawnień administratora.");
 
   return supabase;
-} // <-- TUTAJ BRAKOWAŁO TEJ KLAMRY ZAMYKAJĄCEJ FUNKCJĘ
+}
 
 export async function setProfileShadowban(profileId: string, shadowbanned: boolean) {
   const supabase = await assertAdmin();
   
-  // Rzutowanie metody .update jako any, aby uniknąć błędu braku kolumny w typach
-  const { error } = await (supabase.from("profiles").update as any)({ 
-    is_shadowbanned: shadowbanned 
-  })
-  .eq("id", profileId);
+  const { error } = await supabase
+    .from("profiles")
+    .update({ is_shadowbanned: shadowbanned })
+    .eq("id", profileId);
 
   if (error) throw new Error("Nie udało się zaktualizować profilu.");
   revalidatePath("/admin");
@@ -45,8 +34,6 @@ export async function setProfileShadowban(profileId: string, shadowbanned: boole
 
 export async function deleteProfile(profileId: string) {
   const supabase = await assertAdmin();
-  // Cascades to projects/fires/chat_rooms/messages/notifications owned by
-  // this user via the FK `on delete cascade` constraints in schema.sql.
   const { error } = await supabase.from("profiles").delete().eq("id", profileId);
 
   if (error) throw new Error("Nie udało się usunąć profilu.");
@@ -55,12 +42,10 @@ export async function deleteProfile(profileId: string) {
 
 export async function setProjectShadowban(projectId: string, shadowbanned: boolean) {
   const supabase = await assertAdmin();
-  
-  // Tutaj również rzutujemy .update jako any
-  const { error } = await (supabase.from("projects").update as any)({ 
-    is_shadowbanned: shadowbanned 
-  })
-  .eq("id", projectId);
+  const { error } = await supabase
+    .from("projects")
+    .update({ is_shadowbanned: shadowbanned })
+    .eq("id", projectId);
 
   if (error) throw new Error("Nie udało się zaktualizować projektu.");
   revalidatePath("/admin");
