@@ -96,17 +96,28 @@ export interface Report {
 // Minimal Supabase generated-types shape — swap for `supabase gen types typescript`
 // output once the project is live; this hand-written version keeps the app
 // fully typed in the meantime.
+// supabase-js's GenericTable requires a `Relationships` field on every table,
+// and GenericSchema requires the Views/Functions keys. Omitting any of these
+// makes the schema fail to match GenericSchema, which collapses every query
+// result type to `never` (e.g. profile.is_admin). We don't rely on typed
+// embedded joins, so empty relationships are fine.
+type Table<Row> = { Row: Row; Insert: Partial<Row>; Update: Partial<Row>; Relationships: [] };
+
 export interface Database {
   public: {
     Tables: {
-      profiles: { Row: Profile; Insert: Partial<Profile>; Update: Partial<Profile> };
-      projects: { Row: Project; Insert: Partial<Project>; Update: Partial<Project> };
-      fires: { Row: Fire; Insert: Partial<Fire>; Update: Partial<Fire> };
-      chat_rooms: { Row: ChatRoom; Insert: Partial<ChatRoom>; Update: Partial<ChatRoom> };
-      messages: { Row: Message; Insert: Partial<Message>; Update: Partial<Message> };
-      notifications: { Row: Notification; Insert: Partial<Notification>; Update: Partial<Notification> };
-      join_requests: { Row: JoinRequest; Insert: Partial<JoinRequest>; Update: Partial<JoinRequest> };
-      reports: { Row: Report; Insert: Partial<Report>; Update: Partial<Report> };
+      profiles: Table<Profile>;
+      projects: Table<Project>;
+      fires: Table<Fire>;
+      chat_rooms: Table<ChatRoom>;
+      messages: Table<Message>;
+      notifications: Table<Notification>;
+      join_requests: Table<JoinRequest>;
+      reports: Table<Report>;
     };
+    Views: Record<never, never>;
+    Functions: Record<never, never>;
+    Enums: Record<never, never>;
+    CompositeTypes: Record<never, never>;
   };
 }
