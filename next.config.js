@@ -23,6 +23,8 @@ const nextConfig = {
           // and unsafe-inline for Next's dev-mode style injection. Tighten
           // further (drop unsafe-inline, add a nonce) once fonts are
           // self-hosted instead of fetched from fonts.googleapis.com.
+          // 'unsafe-eval' is added in development only — Next's dev server
+          // (HMR/react-refresh) uses eval() for fast rebuilds.
           {
             key: "Content-Security-Policy",
             value: [
@@ -31,7 +33,7 @@ const nextConfig = {
               "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "script-src 'self' 'unsafe-inline'",
+              `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
               "frame-ancestors 'none'",
             ].join("; "),
           },
