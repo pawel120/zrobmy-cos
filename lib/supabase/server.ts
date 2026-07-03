@@ -1,6 +1,22 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import type { Database } from "../../types/database";
+
+export type Database = {
+  public: {
+    Tables: {
+      profiles: {
+        Row: { id: string; is_admin: boolean; is_shadowbanned: boolean };
+        Insert: { id: string; is_admin?: boolean; is_shadowbanned?: boolean };
+        Update: { id?: string; is_admin?: boolean; is_shadowbanned?: boolean };
+      };
+      projects: {
+        Row: { id: string; is_shadowbanned: boolean };
+        Insert: { id: string; is_shadowbanned?: boolean };
+        Update: { id?: string; is_shadowbanned?: boolean };
+      };
+    };
+  };
+};
 
 export function createClient() {
   const cookieStore = cookies();
@@ -17,15 +33,14 @@ export function createClient() {
           try {
             cookieStore.set({ name, value, ...options });
           } catch {
-            // Called from a Server Component with no request context to mutate —
-            // safe to ignore because middleware refreshes the session anyway.
+            // Bezpieczne do zignorowania w Server Components
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value: "", ...options });
           } catch {
-            // see note above
+            // Bezpieczne do zignorowania w Server Components
           }
         },
       },
