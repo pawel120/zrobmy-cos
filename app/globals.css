@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* shadcn/ui tokens — mapped onto the same OLED black / neon-orange
+       palette as the rest of the app, NOT shadcn's default theme. Radius is
+       0 everywhere: this app has no rounded corners by design. */
+    --background: 0 0% 0%;             /* #000000 */
+    --foreground: 0 0% 98%;            /* zinc-50 */
+    --card: 240 6% 6%;                 /* zinc-950-ish */
+    --card-foreground: 0 0% 98%;
+    --popover: 240 6% 6%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 240 5% 96%;             /* stays zinc, NOT orange — orange is reserved for 🔥 */
+    --primary-foreground: 240 6% 10%;
+    --secondary: 240 4% 16%;           /* zinc-800 */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;    /* zinc-400 */
+    --accent: 16 100% 50%;             /* ogien — used only for explicit accent-intent components */
+    --accent-foreground: 0 0% 0%;
+    --destructive: 16 100% 50%;        /* reuses ogien red-orange, matches existing delete-confirm UI */
+    --destructive-foreground: 0 0% 0%;
+    --border: 240 4% 16%;              /* zinc-800 hairline, the app's universal 1px line */
+    --input: 240 4% 16%;
+    --ring: 16 100% 50%;               /* focus ring is always ogien, matches :focus-visible below */
+    --radius: 0px;
+  }
+
+  html,
+  body {
+    background-color: #000000;
+    color: #fafafa;
+    font-family: "Inter", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  * {
+    border-color: #27272a; /* border-zinc-800 as the universal 1px line */
+  }
+
+  ::selection {
+    background-color: #ff450033;
+    color: #fafafa;
+  }
+
+  /* Visible keyboard focus everywhere — never rely on default outline alone */
+  :focus-visible {
+    outline: 2px solid #ff4500;
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #000000;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #27272a;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
+  }
+}
+
+@layer components {
+  /* Razor-thin hairline divider, the app's primary structural device */
+  .hairline {
+    border-bottom: 1px solid #27272a;
+  }
+
+  /* The single accent surface — reserved for 🔥 and active states only */
+  .accent-surface {
+    background-color: #ff450015;
+    border: 1px solid #ff450055;
+    color: #ff4500;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-none border border-zinc-800
+      bg-zinc-950 px-4 py-2 text-sm font-medium text-zinc-50 transition-colors
+      hover:border-zinc-600 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none;
+  }
+
+  .btn-ogien {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-none border px-3 py-1.5
+      text-sm font-semibold transition-all active:scale-95 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .card {
+    @apply rounded-none border border-zinc-800 bg-zinc-950/40 p-4;
+  }
+
+  .tag {
+    @apply rounded-none border border-zinc-800 px-2 py-0.5 text-xs text-zinc-400;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

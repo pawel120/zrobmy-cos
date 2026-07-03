@@ -1,0 +1,154 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+
+// ----------------------------------------------------------------------------
+// In-memory sliding-window rate limiter for /api/* routes.
+// NOTE: this is per-instance memory. On multi-instance deployments (Vercel
+// serverless, multiple containers) swap this for a shared store — Upstash
+// Redis is the drop-in choice — but the interface below stays identical.
+// ----------------------------------------------------------------------------
+type Bucket = { count: number; windowStart: number };
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 60; // 60 req/min per identity per route group
+
+const buckets = new Map<string, Bucket>();
+
+function rateLimit(identity: string, routeGroup: string): { ok: boolean; remaining: number } {
+  const key = `${identity}:${routeGroup}`;
+  const now = Date.now();
+  const bucket = buckets.get(key);
+
+  if (!bucket || now - bucket.windowStart > RATE_LIMIT_WINDOW_MS) {
+    buckets.set(key, { count: 1, windowStart: now });
+    return { ok: true, remaining: RATE_LIMIT_MAX_REQUESTS - 1 };
+  }
+
+  bucket.count += 1;
+  if (bucket.count > RATE_LIMIT_MAX_REQUESTS) {
+    return { ok: false, remaining: 0 };
+  }
+  return { ok: true, remaining: RATE_LIMIT_MAX_REQUESTS - bucket.count };
+}
+
+// Stricter limits for spam-prone endpoints (chat + fire mechanic)
+const ROUTE_OVERRIDES: Record<string, number> = {
+  "/api/messages": 20,
+  "/api/fires": 10,
+};
+
+// Periodically sweep stale buckets so the Map doesn't grow unbounded on
+// long-lived server instances.
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, bucket] of buckets) {
+    if (now - bucket.windowStart > RATE_LIMIT_WINDOW_MS * 5) buckets.delete(key);
+  }
+}, RATE_LIMIT_WINDOW_MS * 5).unref?.();
+
+const PUBLIC_PATHS = ["/", "/login", "/signup", "/auth/callback", "/students", "/forgot-password", "/reset-password"];
+const PUBLIC_PREFIXES = ["/project/", "/user/", "/_next", "/favicon", "/api/auth", "/api/profiles"];
+
+function isPublicPath(pathname: string): boolean {
+  if (PUBLIC_PATHS.includes(pathname)) return true;
+  return PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+}
+
+export async function middleware(request: NextRequest) {
+  const response = NextResponse.next({ request: { headers: request.headers } });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value;
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          response.cookies.set({ name, value, ...options });
+        },
+        remove(name: string, options: CookieOptions) {
+          response.cookies.set({ name, value: "", ...options });
+        },
+      },
+    }
+  );
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname } = request.nextUrl;
+
+  // ---- API rate limiting -----------------------------------------------
+  if (pathname.startsWith("/api/")) {
+    const identity = user?.id ?? request.headers.get("x-forwarded-for") ?? "anonymous";
+    const routeGroup = Object.keys(ROUTE_OVERRIDES).find((prefix) => pathname.startsWith(prefix)) ?? "default";
+    const max = ROUTE_OVERRIDES[routeGroup] ?? RATE_LIMIT_MAX_REQUESTS;
+
+    const key = `${identity}:${routeGroup}`;
+    const now = Date.now();
+    const bucket = buckets.get(key);
+    let allowed = true;
+    let remaining = max;
+
+    if (!bucket || now - bucket.windowStart > RATE_LIMIT_WINDOW_MS) {
+      buckets.set(key, { count: 1, windowStart: now });
+      remaining = max - 1;
+    } else {
+      bucket.count += 1;
+      remaining = max - bucket.count;
+      if (bucket.count > max) allowed = false;
+    }
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Za dużo żądań. Zwolnij trochę." },
+        { status: 429, headers: { "Retry-After": "60" } }
+      );
+    }
+
+    response.headers.set("X-RateLimit-Remaining", String(Math.max(remaining, 0)));
+
+    // API routes still need an authenticated user unless explicitly public —
+    // /api/auth (session plumbing) and /api/profiles (public directory search,
+    // RLS already hides shadowbanned rows) are reachable while logged out.
+    const isPublicApi = pathname.startsWith("/api/auth") || pathname.startsWith("/api/profiles");
+    if (!user && !isPublicApi) {
+      return NextResponse.json({ error: "Musisz być zalogowany." }, { status: 401 });
+    }
+
+    return response;
+  }
+
+  // ---- Page auth routing --------------------------------------------------
+  if (!user && !isPublicPath(pathname)) {
+    const redirectUrl = new URL("/login", request.url);
+    redirectUrl.searchParams.set("next", pathname);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  if (user && (pathname === "/login" || pathname === "/signup")) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if (pathname.startsWith("/admin") && user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("is_admin")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.is_admin) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
+  return response;
+}
+
+export const config = {
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};
