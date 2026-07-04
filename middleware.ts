@@ -45,8 +45,8 @@ setInterval(() => {
   }
 }, RATE_LIMIT_WINDOW_MS * 5).unref?.();
 
-const PUBLIC_PATHS = ["/", "/login", "/signup", "/auth/callback", "/students", "/forgot-password", "/reset-password"];
-const PUBLIC_PREFIXES = ["/project/", "/user/", "/_next", "/favicon", "/api/auth", "/api/profiles"];
+const PUBLIC_PATHS = ["/", "/login", "/signup", "/auth/callback", "/forgot-password", "/reset-password"];
+const PUBLIC_PREFIXES = ["/project/", "/user/", "/_next", "/favicon", "/api/auth"];
 
 function isPublicPath(pathname: string): boolean {
   if (PUBLIC_PATHS.includes(pathname)) return true;
@@ -111,9 +111,9 @@ export async function middleware(request: NextRequest) {
     response.headers.set("X-RateLimit-Remaining", String(Math.max(remaining, 0)));
 
     // API routes still need an authenticated user unless explicitly public —
-    // /api/auth (session plumbing) and /api/profiles (public directory search,
-    // RLS already hides shadowbanned rows) are reachable while logged out.
-    const isPublicApi = pathname.startsWith("/api/auth") || pathname.startsWith("/api/profiles");
+    // /api/auth (session plumbing) is reachable while logged out. The people
+    // directory (/api/profiles) now requires login, matching /students.
+    const isPublicApi = pathname.startsWith("/api/auth");
     if (!user && !isPublicApi) {
       return NextResponse.json({ error: "Musisz być zalogowany." }, { status: 401 });
     }

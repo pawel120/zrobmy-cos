@@ -30,6 +30,12 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSaved, setPasswordSaved] = useState(false);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -141,6 +147,33 @@ export default function SettingsPage() {
     setIsSaving(false);
   }
 
+  async function handleChangePassword(e: React.FormEvent) {
+    e.preventDefault();
+    setPasswordError(null);
+    setPasswordSaved(false);
+
+    if (newPassword.length < 8) {
+      setPasswordError("Hasło musi mieć co najmniej 8 znaków.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError("Hasła się nie zgadzają.");
+      return;
+    }
+
+    setIsChangingPassword(true);
+    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+
+    if (updateError) {
+      setPasswordError("Nie udało się zmienić hasła. Spróbuj ponownie.");
+    } else {
+      setPasswordSaved(true);
+      setNewPassword("");
+      setConfirmPassword("");
+    }
+    setIsChangingPassword(false);
+  }
+
   if (!profile) {
     return <main className="mx-auto max-w-2xl px-4 py-10 text-sm text-zinc-600">Ładowanie…</main>;
   }
@@ -239,6 +272,42 @@ export default function SettingsPage() {
           {isSaving ? "Zapisuję…" : "Zapisz zmiany"}
         </button>
       </form>
+
+      <section className="hairline mt-10 pt-6">
+        <h2 className="mb-4 text-sm font-semibold text-zinc-50">Zmiana hasła</h2>
+        <form onSubmit={handleChangePassword} className="flex flex-col gap-5">
+          <label className="flex flex-col gap-1 text-xs text-zinc-500">
+            Nowe hasło
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              minLength={8}
+              autoComplete="new-password"
+              className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            />
+          </label>
+
+          <label className="flex flex-col gap-1 text-xs text-zinc-500">
+            Powtórz nowe hasło
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              minLength={8}
+              autoComplete="new-password"
+              className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            />
+          </label>
+
+          {passwordError && <p className="text-xs text-ogien">{passwordError}</p>}
+          {passwordSaved && <p className="text-xs text-zinc-500">Hasło zmienione.</p>}
+
+          <button type="submit" disabled={isChangingPassword} className="btn-primary self-start">
+            {isChangingPassword ? "Zmieniam…" : "Zmień hasło"}
+          </button>
+        </form>
+      </section>
     </main>
   );
 }
