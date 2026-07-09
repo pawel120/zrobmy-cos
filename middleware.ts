@@ -106,6 +106,21 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // ---- Recovery/confirmation code safety net --------------------------------
+  // Supabase falls back to the Site URL (our root "/") when a requested
+  // redirectTo isn't matched by the Redirect URLs allowlist — which happens
+  // with query-laden targets like /auth/callback?next=/reset-password. That
+  // drops the code on "/?code=..." where nothing exchanges it. Forward any
+  // stray code to /auth/callback, which knows how to turn it into a session.
+  // Default next to /reset-password (the only email flow in use — email
+  // confirmation is off), while respecting an explicit next if one survived.
+  if (pathname === "/" && request.nextUrl.searchParams.has("code")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/callback";
+    if (!url.searchParams.has("next")) url.searchParams.set("next", "/reset-password");
+    return NextResponse.redirect(url);
+  }
+
   // ---- Profile self-heal ----------------------------------------------------
   // Signup normally creates the profile row via the handle_new_user trigger,
   // but that trigger is deliberately non-blocking — if it ever fails (or the
