@@ -45,7 +45,7 @@ export function GoogleSignInButton() {
           <path fill="#4CAF50" d="M24 44c5.5 0 10.5-2.1 14.3-5.6l-6.6-5.6C29.6 34.6 26.9 36 24 36c-5.2 0-9.6-3.3-11.2-8l-6.6 5.1C9.5 39.6 16.2 44 24 44z" />
           <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.6 5.6C39.9 36.5 44 31 44 24c0-1.3-.1-2.4-.4-3.5z" />
         </svg>
-        {isLoading ? "Przekierowuję…" : "Zaloguj przez Google"}
+        {isLoading ? "Przekierowuję…" : "Kontynuuj z Google"}
       </button>
       {error && <p className="text-xs text-ogien">{error}</p>}
     </div>
