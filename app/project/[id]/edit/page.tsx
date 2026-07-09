@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { dbError } from "@/lib/utils";
 import type { Project, ProjectPhase } from "@/types/database";
 
 const PHASE_OPTIONS: { value: ProjectPhase; label: string }[] = [
@@ -37,6 +38,10 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notAllowed, setNotAllowed] = useState(false);
+  // True when the editor is an admin working on someone else's project. The
+  // admin_full_projects RLS policy already permits the write; this just drives
+  // the "admin mode" banner and where we redirect afterwards.
+  const [isAdminEdit, setIsAdminEdit] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -64,8 +69,17 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
         return;
       }
       if (data.owner_id !== user.id) {
-        setNotAllowed(true);
-        return;
+        // Not the owner — allow through only if the caller is an admin.
+        const { data: me } = await supabase
+          .from("profiles")
+          .select("is_admin")
+          .eq("id", user.id)
+          .single();
+        if (!me?.is_admin) {
+          setNotAllowed(true);
+          return;
+        }
+        if (isMounted) setIsAdminEdit(true);
       }
 
       setProject(data as Project);
@@ -109,12 +123,13 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
       .eq("id", project.id);
 
     if (updateError) {
-      setError("Nie udało się zapisać zmian.");
+      console.error("project update failed:", updateError);
+      setError(dbError("Nie udało się zapisać zmian", updateError));
       setIsSaving(false);
       return;
     }
 
-    router.push(`/project/${project.id}`);
+    router.push(isAdminEdit ? "/admin?tab=projects" : `/project/${project.id}`);
     router.refresh();
   }
 
@@ -131,13 +146,14 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
     const { error: deleteError } = await supabase.from("projects").delete().eq("id", project.id);
 
     if (deleteError) {
-      setError("Nie udało się usunąć projektu.");
+      console.error("project delete failed:", deleteError);
+      setError(dbError("Nie udało się usunąć projektu", deleteError));
       setIsDeleting(false);
       setConfirmingDelete(false);
       return;
     }
 
-    router.push("/");
+    router.push(isAdminEdit ? "/admin?tab=projects" : "/");
     router.refresh();
   }
 
@@ -156,7 +172,13 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
       <h1 className="mb-1 text-xl font-semibold text-zinc-50">Edytuj projekt</h1>
-      <p className="mb-8 text-sm text-zinc-500">Zmień co trzeba albo usuń, jeśli projekt umarł.</p>
+      {isAdminEdit ? (
+        <p className="mb-8 text-sm text-ogien">
+          Tryb admina — edytujesz cudzy projekt. Zmiany są natychmiastowe.
+        </p>
+      ) : (
+        <p className="mb-8 text-sm text-zinc-500">Zmień co trzeba albo usuń, jeśli projekt umarł.</p>
+      )}
 
       <form onSubmit={handleSave} className="flex flex-col gap-5">
         <label className="flex flex-col gap-1 text-xs text-zinc-500">

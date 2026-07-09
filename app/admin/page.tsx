@@ -82,7 +82,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   return (
     <main className="mx-auto max-w-4xl px-4 py-10">
       <h1 className="mb-1 text-xl font-semibold text-zinc-50">Panel admina</h1>
-      <p className="mb-6 text-sm text-zinc-500">Profile, projekty i zgłoszenia. Shadowban ukrywa bez informowania właściciela.</p>
+      <p className="mb-6 text-sm text-zinc-500">Profile, projekty i zgłoszenia. Edycja redaguje treść, shadowban ukrywa bez informowania właściciela.</p>
 
       <div className="hairline mb-4 flex items-center justify-between pb-3">
         <div className="flex gap-4 text-sm">

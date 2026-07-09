@@ -10,9 +10,17 @@ export function ProfileRow({ id, isShadowbanned }: { id: string; isShadowbanned:
   // Supabase's dashboard (Authentication → Users), where the FK cascade
   // cleans the profile up correctly.
   return (
-    <AdminRowActions
-      isShadowbanned={isShadowbanned}
-      onToggleShadowban={(next) => setProfileShadowban(id, next)}
-    />
+    <div className="flex items-center gap-3">
+      <a
+        href={`/admin/profile/${id}/edit`}
+        className="border border-zinc-800 px-2 py-1 text-xs text-zinc-400 hover:border-ogien hover:text-ogien"
+      >
+        Edytuj
+      </a>
+      <AdminRowActions
+        isShadowbanned={isShadowbanned}
+        onToggleShadowban={(next) => setProfileShadowban(id, next)}
+      />
+    </div>
   );
 }
