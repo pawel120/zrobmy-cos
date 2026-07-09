@@ -5,8 +5,10 @@ import { useState, useTransition } from "react";
 interface AdminRowActionsProps {
   isShadowbanned: boolean;
   onToggleShadowban: (next: boolean) => Promise<void>;
-  onDelete: () => Promise<void>;
-  deleteConfirmLabel: string;
+  // Optional: rows without a safe hard-delete path (profiles — deleting the
+  // profile row alone leaves a zombie auth.users account) only get shadowban.
+  onDelete?: () => Promise<void>;
+  deleteConfirmLabel?: string;
 }
 
 export function AdminRowActions({
@@ -31,6 +33,7 @@ export function AdminRowActions({
   }
 
   function handleDelete() {
+    if (!onDelete) return;
     if (!confirmingDelete) {
       setConfirmingDelete(true);
       return;
@@ -55,18 +58,20 @@ export function AdminRowActions({
       >
         {isShadowbanned ? "Cofnij shadowban" : "Shadowban"}
       </button>
-      <button
-        onClick={handleDelete}
-        onBlur={() => setConfirmingDelete(false)}
-        disabled={isPending}
-        className={
-          confirmingDelete
-            ? "border border-ogien bg-ogien/10 px-2 py-1 text-xs text-ogien disabled:opacity-40"
-            : "border border-zinc-800 px-2 py-1 text-xs text-zinc-400 hover:border-ogien hover:text-ogien disabled:opacity-40"
-        }
-      >
-        {confirmingDelete ? deleteConfirmLabel : "Usuń"}
-      </button>
+      {onDelete && (
+        <button
+          onClick={handleDelete}
+          onBlur={() => setConfirmingDelete(false)}
+          disabled={isPending}
+          className={
+            confirmingDelete
+              ? "border border-ogien bg-ogien/10 px-2 py-1 text-xs text-ogien disabled:opacity-40"
+              : "border border-zinc-800 px-2 py-1 text-xs text-zinc-400 hover:border-ogien hover:text-ogien disabled:opacity-40"
+          }
+        >
+          {confirmingDelete ? deleteConfirmLabel : "Usuń"}
+        </button>
+      )}
       {error && <span className="text-xs text-ogien">{error}</span>}
     </div>
   );

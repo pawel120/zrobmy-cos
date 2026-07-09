@@ -8,9 +8,19 @@
 
 -- ============================================================================
 -- Trigger: auto-create profile row when a new auth.users row appears
+--
+-- Split into three pieces so profile creation is never a single point of
+-- failure for signup:
+--   create_profile_for_user() — shared, race-safe creation logic
+--   handle_new_user()         — trigger wrapper that NEVER raises (a failure
+--                               here would roll back the auth.users insert
+--                               and abort the whole signup)
+--   ensure_profile()          — self-heal RPC: any logged-in user missing a
+--                               profile row gets one on their next request
+--                               (called from middleware.ts)
 -- ============================================================================
-create or replace function public.handle_new_user()
-returns trigger
+create or replace function public.create_profile_for_user(uid uuid, user_email text, meta jsonb)
+returns void
 language plpgsql
 security definer
 set search_path = public
@@ -20,20 +30,51 @@ declare
   final_username text;
   suffix int := 0;
 begin
-  base_username := lower(regexp_replace(coalesce(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1)), '[^a-z0-9_]', '', 'g'));
+  if exists (select 1 from public.profiles where id = uid) then
+    return;
+  end if;
+
+  base_username := lower(regexp_replace(coalesce(meta->>'username', split_part(user_email, '@', 1), ''), '[^a-z0-9_]', '', 'g'));
   if base_username = '' then
     base_username := 'student';
   end if;
   final_username := base_username;
 
-  while exists (select 1 from public.profiles where username = final_username) loop
-    suffix := suffix + 1;
-    final_username := base_username || suffix::text;
+  -- Race-safe dedup: instead of check-then-insert (two concurrent signups
+  -- with the same base name could both pass the check), attempt the INSERT
+  -- and let the unique index arbitrate; on collision retry with a suffix,
+  -- falling back to a random suffix if sequential ones keep colliding.
+  loop
+    begin
+      insert into public.profiles (id, username, display_name)
+      values (uid, final_username, coalesce(meta->>'display_name', base_username))
+      on conflict (id) do nothing;
+      return;
+    exception when unique_violation then
+      suffix := suffix + 1;
+      if suffix > 20 then
+        final_username := base_username || '_' || substr(md5(random()::text), 1, 6);
+      else
+        final_username := base_username || suffix::text;
+      end if;
+    end;
   end loop;
+end;
+$$;
 
-  insert into public.profiles (id, username, display_name)
-  values (new.id, final_username, coalesce(new.raw_user_meta_data->>'display_name', base_username));
-
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  perform public.create_profile_for_user(new.id, new.email, new.raw_user_meta_data);
+  return new;
+exception when others then
+  -- Never abort the signup because of the profile: log and continue —
+  -- ensure_profile() will heal the missing row on the user's next request.
+  raise warning 'handle_new_user failed for %: %', new.id, sqlerrm;
   return new;
 end;
 $$;
@@ -42,6 +83,32 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+create or replace function public.ensure_profile()
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  me uuid := auth.uid();
+  u record;
+begin
+  if me is null then
+    return;
+  end if;
+  if exists (select 1 from public.profiles where id = me) then
+    return;
+  end if;
+
+  select email, raw_user_meta_data into u from auth.users where id = me;
+  if not found then
+    return;
+  end if;
+
+  perform public.create_profile_for_user(me, u.email, u.raw_user_meta_data);
+end;
+$$;
 
 -- ============================================================================
 -- Trigger: keep projects.fire_count and profiles.hype_score in sync

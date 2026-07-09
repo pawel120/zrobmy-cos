@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { dbError } from "@/lib/utils";
 
 interface NapiszButtonProps {
   targetUserId: string;
@@ -30,7 +31,8 @@ export function NapiszButton({ targetUserId, currentUserId }: NapiszButtonProps)
     });
 
     if (rpcError || !data) {
-      setError("Nie udało się otworzyć czatu.");
+      console.error("get_or_create_chat_room failed:", rpcError);
+      setError(dbError("Nie udało się otworzyć czatu", rpcError));
       setIsLoading(false);
       return;
     }

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { dbError } from "@/lib/utils";
 import { ProfileLink } from "@/components/profile-link";
 import type { Message, Profile } from "@/types/database";
 
@@ -73,6 +74,12 @@ export default function ChatPage({ params }: ChatPageProps) {
         .select("*")
         .eq("id", otherUserId)
         .single();
+      if (!otherProfile) {
+        // Without this the header shows "Ładowanie…" forever (e.g. the other
+        // account's profile was deleted) — fail visibly instead.
+        if (isMounted) setLoadError("Nie znaleziono rozmówcy — konto mogło zostać usunięte.");
+        return;
+      }
       if (isMounted) setOtherUser(otherProfile as Profile);
 
       const { data: history } = await supabase
@@ -155,8 +162,9 @@ export default function ChatPage({ params }: ChatPageProps) {
       .single();
 
     if (error) {
+      console.error("message insert failed:", error);
       setMessages((prev) => prev.filter((m) => m.id !== tempId));
-      setLoadError("Wiadomość nie została wysłana.");
+      setLoadError(dbError("Wiadomość nie została wysłana", error));
     } else if (inserted) {
       // Swap the temp bubble for the real row (same content, real id) and
       // mark the real id as seen so the realtime echo is ignored.

@@ -121,6 +121,28 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // ---- Profile self-heal ----------------------------------------------------
+  // Signup normally creates the profile row via the handle_new_user trigger,
+  // but that trigger is deliberately non-blocking — if it ever fails (or the
+  // account predates the schema), the user has auth but no profile and every
+  // FK into profiles breaks. ensure_profile() recreates the row idempotently.
+  // Cookie-guarded so the extra RPC runs at most once an hour per browser,
+  // not on every request.
+  if (user && !request.cookies.get("bt_profile_ok")) {
+    await supabase.rpc("ensure_profile").then(
+      () => {},
+      () => {} // best-effort: never block navigation on the heal call
+    );
+    response.cookies.set({
+      name: "bt_profile_ok",
+      value: "1",
+      maxAge: 3600,
+      path: "/",
+      sameSite: "lax",
+      httpOnly: true,
+    });
+  }
+
   // ---- Page auth routing --------------------------------------------------
   if (!user && !isPublicPath(pathname)) {
     const redirectUrl = new URL("/login", request.url);

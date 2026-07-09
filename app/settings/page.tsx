@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { dbError } from "@/lib/utils";
 import type { Profile } from "@/types/database";
 
 function parseList(raw: string): string[] {
@@ -96,7 +97,8 @@ export default function SettingsPage() {
       .upload(path, file, { upsert: true, cacheControl: "3600" });
 
     if (uploadError) {
-      setError("Nie udało się wgrać zdjęcia.");
+      console.error("avatar upload failed:", uploadError);
+      setError(dbError("Nie udało się wgrać zdjęcia", uploadError));
       setIsUploading(false);
       return;
     }
@@ -112,7 +114,8 @@ export default function SettingsPage() {
       .eq("id", userId);
 
     if (updateError) {
-      setError("Zdjęcie wgrane, ale nie udało się zapisać profilu.");
+      console.error("avatar_url update failed:", updateError);
+      setError(dbError("Zdjęcie wgrane, ale nie udało się zapisać profilu", updateError));
     } else {
       setAvatarUrl(bustedUrl);
     }
@@ -139,7 +142,8 @@ export default function SettingsPage() {
       .eq("id", userId);
 
     if (updateError) {
-      setError("Nie udało się zapisać zmian.");
+      console.error("profile update failed:", updateError);
+      setError(dbError("Nie udało się zapisać zmian", updateError));
     } else {
       setSaved(true);
       router.refresh();
@@ -165,7 +169,8 @@ export default function SettingsPage() {
     const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
 
     if (updateError) {
-      setPasswordError("Nie udało się zmienić hasła. Spróbuj ponownie.");
+      console.error("password update failed:", updateError);
+      setPasswordError(dbError("Nie udało się zmienić hasła", updateError));
     } else {
       setPasswordSaved(true);
       setNewPassword("");

@@ -28,12 +28,12 @@ export async function setProfileShadowban(profileId: string, shadowbanned: boole
   revalidatePath("/admin");
 }
 
-export async function deleteProfile(profileId: string) {
-  const supabase = await assertAdmin();
-  const { error } = await supabase.from("profiles").delete().eq("id", profileId);
-  if (error) throw new Error("Nie udało się usunąć profilu.");
-  revalidatePath("/admin");
-}
+// Intentionally no deleteProfile action: deleting the profiles row alone
+// orphans the auth.users account (it can still log in, but every FK into
+// profiles is broken and the trigger only fires on signup). Full account
+// deletion requires the service-role Admin API — until that exists, use
+// shadowban here and Supabase's dashboard (Authentication → Users) for
+// actual removal, which cascades to the profile correctly.
 
 export async function setProjectShadowban(projectId: string, shadowbanned: boolean) {
   const supabase = await assertAdmin();

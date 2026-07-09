@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { dbError } from "@/lib/utils";
 
 interface JoinRequestButtonProps {
   projectId: string;
@@ -39,7 +40,8 @@ export function JoinRequestButton({ projectId, currentUserId, alreadyRequested }
       if (insertError.code === "23505") {
         setSent(true);
       } else {
-        setError("Nie udało się wysłać prośby.");
+        console.error("join_requests insert failed:", insertError);
+        setError(dbError("Nie udało się wysłać prośby", insertError));
       }
       setIsSubmitting(false);
       return;

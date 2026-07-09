@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { dbError } from "@/lib/utils";
 
 interface FireButtonProps {
   projectId: string;
@@ -52,9 +53,10 @@ export function FireButton({
           return;
         }
         // Any other failure: roll back the optimistic update.
+        console.error("fires insert failed:", insertError);
         setHasFired(false);
         setFireCount((c) => Math.max(c - 1, 0));
-        setError("Nie udało się dać 🔥. Spróbuj ponownie.");
+        setError(dbError("Nie udało się dać 🔥", insertError));
       }
       setIsLocked(false);
     });
