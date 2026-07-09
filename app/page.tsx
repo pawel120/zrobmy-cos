@@ -33,7 +33,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     <main className="mx-auto max-w-2xl px-4 py-10">
       <div className="hairline mb-6 flex items-center justify-between pb-4">
         <div>
-          <h1 className="text-xl font-semibold text-zinc-50">Zróbmy coś</h1>
+          <h1 className="text-xl font-semibold text-zinc-50">BuildTogether</h1>
           <p className="text-sm text-zinc-500">Znajdź projekt albo znajdź ekipę.</p>
         </div>
         {user ? (

@@ -1,4 +1,4 @@
-# Zróbmy coś — starter blueprint
+# BuildTogether — starter blueprint
 
 ## Stack
 Next.js 14 (App Router) · Supabase (Auth, Postgres, Realtime, RLS) · Tailwind CSS · shadcn/ui
@@ -11,6 +11,25 @@ npm run dev
 ```
 All the scaffolding (`package.json`, `tsconfig.json`, `next.config.js`, `postcss.config.js`, `tailwind.config.js`, `.eslintrc.json`) ships with this repo already — no `create-next-app` step needed, just install and run.
 Run `schema.sql` in the Supabase SQL editor (or `supabase db push`) against a fresh project — it creates every table, trigger, RPC, and RLS policy in one pass.
+
+## Konfiguracja maili (Supabase Auth)
+
+Logowanie magic-linkiem, potwierdzanie konta po signupie i reset hasła wymagają, żeby Supabase realnie wysyłał maile. **Ta konfiguracja żyje w panelu Supabase, nie w tym repo** — w kodzie nie ma i nie powinno być żadnych danych SMTP.
+
+Domyślnie projekt korzysta z **wbudowanego mailera Supabase**, który jest tylko do testów: limit ok. 2–3 maili/godzinę, potem po cichu przestaje wysyłać (aplikacja nie dostaje błędu, użytkownik widzi „sprawdź skrzynkę", a mail nie przychodzi). To najczęstsza przyczyna „nie da się zalogować".
+
+**Szybko, żeby w ogóle się zalogować (dev):** wyłącz potwierdzanie maila — Supabase → **Authentication → Sign In / Providers → Email → „Confirm email" = OFF**. Wtedy konto z `/signup` od razu ma sesję i logujesz się hasłem bez żadnego maila.
+
+**Poprawnie, na produkcję:** podłącz własny SMTP (np. [Resend](https://resend.com) — darmowe 3000 maili/mies.):
+1. Załóż konto u dostawcy, zweryfikuj domenę, wygeneruj klucz / dane SMTP.
+2. Supabase → **Authentication → Emails → SMTP Settings → Enable Custom SMTP** i wpisz host / port / user / hasło (klucz) oraz adres nadawcy z Twojej domeny.
+3. Zapisz — od teraz wszystkie maile auth idą przez tego dostawcę, bez limitów.
+
+**Żeby linki z maili działały:** Supabase → **Authentication → URL Configuration**:
+- **Site URL:** `http://localhost:3000` (lokalnie) lub Twoja domena z Vercela.
+- **Redirect URLs:** dodaj `http://localhost:3000/**` oraz `https://<twoja-domena>/**` — inaczej Supabase odrzuci przekierowanie na `/auth/callback`.
+
+> Uwaga: Neon (ani żaden hosting bazy) nie wysyła maili — za maile auth odpowiada wyłącznie Supabase.
 
 ## File map
 ```

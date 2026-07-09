@@ -20,16 +20,16 @@ export async function generateMetadata({ params }: UserPageProps): Promise<Metad
     .single();
 
   if (!profile) {
-    return { title: "Nie znaleziono profilu — Zróbmy coś" };
+    return { title: "Nie znaleziono profilu — BuildTogether" };
   }
 
   const name = profile.display_name || profile.username;
   const description = profile.bio || `${profile.faculty ?? "Student"} · 🔥 ${profile.hype_score} hype'u`;
 
   return {
-    title: `${name} (@${profile.username}) — Zróbmy coś`,
+    title: `${name} (@${profile.username}) — BuildTogether`,
     description,
-    openGraph: { title: name, description, type: "profile", siteName: "Zróbmy coś" },
+    openGraph: { title: name, description, type: "profile", siteName: "BuildTogether" },
     twitter: { card: "summary", title: name, description },
   };
 }

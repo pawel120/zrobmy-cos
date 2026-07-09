@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: ["/", "/project/", "/user/", "/students"],
       disallow: ["/admin", "/settings", "/messages", "/notifications", "/api/", "/login", "/signup"],
     },
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://zrobmycos.app"}/sitemap.xml`,
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://buildtogether.pl"}/sitemap.xml`,
   };
 }

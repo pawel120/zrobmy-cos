@@ -84,7 +84,7 @@ export function NavBar() {
     <header className="hairline sticky top-0 z-40 bg-black/90 backdrop-blur">
       <nav className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3 text-sm">
         <Link href="/" className="font-display font-semibold text-zinc-50">
-          Zróbmy coś
+          BuildTogether
         </Link>
 
         <div className="flex items-center gap-4">

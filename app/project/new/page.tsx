@@ -74,7 +74,19 @@ export default function NewProjectPage() {
       .single();
 
     if (insertError || !data) {
-      setError("Nie udało się dodać projektu. Spróbuj ponownie.");
+      // Surface the real Postgres/RLS error instead of swallowing it — a
+      // foreign-key violation here almost always means the user has no
+      // matching `profiles` row (owner_id references profiles.id).
+      console.error("Project insert failed:", insertError);
+      const isMissingProfile =
+        insertError?.code === "23503" || insertError?.message?.includes("profiles");
+      setError(
+        isMissingProfile
+          ? "Twoje konto nie ma jeszcze profilu w bazie — wyloguj się i zarejestruj ponownie."
+          : insertError
+            ? `Nie udało się dodać projektu: ${insertError.message}`
+            : "Nie udało się dodać projektu. Spróbuj ponownie."
+      );
       setIsSubmitting(false);
       return;
     }

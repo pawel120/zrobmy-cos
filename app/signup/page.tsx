@@ -71,7 +71,7 @@ export default function SignupPage() {
 
   return (
     <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-sm flex-col justify-center px-4">
-      <h1 className="mb-1 text-xl font-semibold text-zinc-50">Zróbmy coś</h1>
+      <h1 className="mb-1 text-xl font-semibold text-zinc-50">BuildTogether</h1>
       <p className="mb-8 text-sm text-zinc-500">Załóż konto i znajdź ekipę.</p>
 
       <form onSubmit={handleSignup} className="flex flex-col gap-3">

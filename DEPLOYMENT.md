@@ -1,4 +1,4 @@
-# Deploying Zróbmy coś
+# Deploying BuildTogether
 
 Two parts: get a Supabase backend running, then get this Next.js app running locally in VS Code and deployed.
 
@@ -110,7 +110,7 @@ This is what makes magic links, signup confirmation, and password reset redirect
 The app was built mobile-first specifically so this step is small when you're ready:
 ```bash
 npm install @capacitor/core @capacitor/cli
-npx cap init "Zróbmy coś" "com.yourcompany.zrobmycos" --web-dir=out
+npx cap init "BuildTogether" "pl.buildtogether.app" --web-dir=out
 ```
 This needs `next.config.js` set to `output: 'export'` for a static build, which conflicts with the server-rendered pages (auth, admin, API routes) this app relies on — so the practical path is Capacitor's [server URL mode](https://capacitorjs.com/docs/guides/splash-screens-and-icons) pointing at your deployed Vercel URL, rather than a fully static export. Worth its own pass when you're actually ready for app stores rather than guessing at it now.
 

@@ -1,4 +1,4 @@
-# ADD Diagnostics — Zróbmy coś
+# ADD Diagnostics — BuildTogether
 
 Three edge-cases identified while building the layout, and exactly where the code above handles each one.
 

@@ -11,14 +11,14 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://zrobmycos.app"),
-  title: "Zróbmy coś",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://buildtogether.pl"),
+  title: "BuildTogether",
   description: "Antidote to LinkedIn. Znajdź projekt albo znajdź ekipę.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Zróbmy coś",
+    title: "BuildTogether",
   },
   icons: {
     icon: "/icon-512.png",

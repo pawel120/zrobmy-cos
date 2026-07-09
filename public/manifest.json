@@ -1,6 +1,6 @@
 {
-  "name": "Zróbmy coś",
-  "short_name": "Zróbmy coś",
+  "name": "BuildTogether",
+  "short_name": "BuildTogether",
   "description": "Antidote to LinkedIn. Znajdź projekt albo znajdź ekipę.",
   "start_url": "/",
   "display": "standalone",

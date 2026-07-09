@@ -1,5 +1,5 @@
 -- ============================================================================
--- Zróbmy coś — Supabase schema, triggers, and RLS policies
+-- BuildTogether — Supabase schema, triggers, and RLS policies
 -- Run against a fresh Supabase Postgres project (SQL editor or `supabase db push`)
 -- ============================================================================
 

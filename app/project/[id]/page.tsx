@@ -31,20 +31,20 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     .single();
 
   if (!project) {
-    return { title: "Nie znaleziono projektu — Zróbmy coś" };
+    return { title: "Nie znaleziono projektu — BuildTogether" };
   }
 
   const description =
     project.description.length > 160 ? `${project.description.slice(0, 157)}…` : project.description;
 
   return {
-    title: `${project.title} — Zróbmy coś`,
+    title: `${project.title} — BuildTogether`,
     description,
     openGraph: {
       title: project.title,
       description,
       type: "website",
-      siteName: "Zróbmy coś",
+      siteName: "BuildTogether",
     },
     twitter: {
       card: "summary",
