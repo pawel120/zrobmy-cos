@@ -180,16 +180,16 @@ export default function SettingsPage() {
   }
 
   if (!profile) {
-    return <main className="mx-auto max-w-2xl px-4 py-10 text-sm text-zinc-600">Ładowanie…</main>;
+    return <main className="mx-auto max-w-2xl px-4 py-10 text-sm text-stone-600">Ładowanie…</main>;
   }
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-1 text-xl font-semibold text-zinc-50">Ustawienia profilu</h1>
-      <p className="mb-8 text-sm text-zinc-500">@{profile.username}</p>
+      <h1 className="mb-1 text-xl font-semibold text-stone-50">Ustawienia profilu</h1>
+      <p className="mb-8 text-sm text-stone-500">@{profile.username}</p>
 
       <section className="hairline mb-6 flex items-center gap-4 pb-6">
-        <div className="flex h-16 w-16 items-center justify-center overflow-hidden border border-zinc-800 bg-zinc-900 font-mono text-lg text-zinc-400">
+        <div className="flex h-16 w-16 items-center justify-center overflow-hidden border border-stone-800 bg-stone-900 font-mono text-lg text-stone-400">
           {avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
@@ -213,65 +213,65 @@ export default function SettingsPage() {
           >
             {isUploading ? "Wgrywam…" : "Zmień zdjęcie"}
           </button>
-          <p className="mt-1 text-xs text-zinc-600">JPG/PNG, max 3 MB</p>
+          <p className="mt-1 text-xs text-stone-600">JPG/PNG, max 3 MB</p>
         </div>
       </section>
 
       <form onSubmit={handleSave} className="flex flex-col gap-5">
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Wyświetlana nazwa
           <input
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             maxLength={60}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Wydział
           <input
             value={faculty}
             onChange={(e) => setFaculty(e.target.value)}
             maxLength={80}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
             placeholder="Np. Informatyka"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           O sobie
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={4}
             maxLength={500}
-            className="resize-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="resize-none border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Potrafię (oddziel przecinkami)
           <input
             value={skillsHave}
             onChange={(e) => setSkillsHave(e.target.value)}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
             placeholder="React, Figma, SQL"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Szukam (oddziel przecinkami)
           <input
             value={skillsWant}
             onChange={(e) => setSkillsWant(e.target.value)}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
             placeholder="Backend, Marketing"
           />
         </label>
 
-        {error && <p className="text-xs text-ogien">{error}</p>}
-        {saved && <p className="text-xs text-zinc-500">Zapisano.</p>}
+        {error && <p className="text-xs text-danger">{error}</p>}
+        {saved && <p className="text-xs text-stone-500">Zapisano.</p>}
 
         <button type="submit" disabled={isSaving} className="btn-primary self-start">
           {isSaving ? "Zapisuję…" : "Zapisz zmiany"}
@@ -279,9 +279,9 @@ export default function SettingsPage() {
       </form>
 
       <section className="hairline mt-10 pt-6">
-        <h2 className="mb-4 text-sm font-semibold text-zinc-50">Zmiana hasła</h2>
+        <h2 className="mb-4 text-sm font-semibold text-stone-50">Zmiana hasła</h2>
         <form onSubmit={handleChangePassword} className="flex flex-col gap-5">
-          <label className="flex flex-col gap-1 text-xs text-zinc-500">
+          <label className="flex flex-col gap-1 text-xs text-stone-500">
             Nowe hasło
             <input
               type="password"
@@ -289,11 +289,11 @@ export default function SettingsPage() {
               onChange={(e) => setNewPassword(e.target.value)}
               minLength={8}
               autoComplete="new-password"
-              className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+              className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
             />
           </label>
 
-          <label className="flex flex-col gap-1 text-xs text-zinc-500">
+          <label className="flex flex-col gap-1 text-xs text-stone-500">
             Powtórz nowe hasło
             <input
               type="password"
@@ -301,12 +301,12 @@ export default function SettingsPage() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               minLength={8}
               autoComplete="new-password"
-              className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+              className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
             />
           </label>
 
-          {passwordError && <p className="text-xs text-ogien">{passwordError}</p>}
-          {passwordSaved && <p className="text-xs text-zinc-500">Hasło zmienione.</p>}
+          {passwordError && <p className="text-xs text-danger">{passwordError}</p>}
+          {passwordSaved && <p className="text-xs text-stone-500">Hasło zmienione.</p>}
 
           <button type="submit" disabled={isChangingPassword} className="btn-primary self-start">
             {isChangingPassword ? "Zmieniam…" : "Zmień hasło"}

@@ -102,18 +102,18 @@ export default function MessagesInboxPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-6 text-xl font-semibold text-zinc-50">Wiadomości</h1>
+      <h1 className="mb-6 text-xl font-semibold text-stone-50">Wiadomości</h1>
 
-      {error && <p className="mb-4 text-xs text-ogien">{error}</p>}
+      {error && <p className="mb-4 text-xs text-danger">{error}</p>}
 
       {isLoading ? (
-        <p className="text-sm text-zinc-600">Ładowanie…</p>
+        <p className="text-sm text-stone-600">Ładowanie…</p>
       ) : entries.length === 0 ? (
-        <p className="text-sm text-zinc-600">
+        <p className="text-sm text-stone-600">
           Brak rozmów. Wejdź na czyjś profil i kliknij [Napisz], żeby zacząć.
         </p>
       ) : (
-        <ul className="divide-y divide-zinc-900">
+        <ul className="divide-y divide-stone-900">
           {entries.map((entry) => (
             <li key={entry.room_id}>
               <button
@@ -124,9 +124,9 @@ export default function MessagesInboxPage() {
                   {entry.otherUser ? (
                     <ProfileLink profile={entry.otherUser} />
                   ) : (
-                    <span className="text-zinc-600">Nieznany użytkownik</span>
+                    <span className="text-stone-600">Nieznany użytkownik</span>
                   )}
-                  <p className="mt-0.5 truncate pl-8 text-sm text-zinc-500">
+                  <p className="mt-0.5 truncate pl-8 text-sm text-stone-500">
                     {entry.last_message_content ?? "Zacznijcie rozmowę…"}
                   </p>
                 </div>

@@ -22,7 +22,7 @@ export function ReportButton({ target, currentUserId }: ReportButtonProps) {
   const [error, setError] = useState<string | null>(null);
 
   if (sent) {
-    return <p className="text-xs text-zinc-600">Zgłoszenie wysłane. Dziękujemy.</p>;
+    return <p className="text-xs text-stone-600">Zgłoszenie wysłane. Dziękujemy.</p>;
   }
 
   if (!isOpen) {
@@ -35,7 +35,7 @@ export function ReportButton({ target, currentUserId }: ReportButtonProps) {
           }
           setIsOpen(true);
         }}
-        className="text-xs text-zinc-600 hover:text-ogien"
+        className="text-xs text-stone-600 hover:text-danger"
       >
         Zgłoś
       </button>
@@ -72,8 +72,8 @@ export function ReportButton({ target, currentUserId }: ReportButtonProps) {
   }
 
   return (
-    <div className="flex flex-col gap-2 border border-zinc-800 bg-zinc-950 p-3">
-      <p className="text-xs text-zinc-500">Dlaczego zgłaszasz?</p>
+    <div className="flex flex-col gap-2 border border-stone-800 bg-stone-950 p-3">
+      <p className="text-xs text-stone-500">Dlaczego zgłaszasz?</p>
       <div className="flex flex-wrap gap-1.5">
         {REASON_PRESETS.map((preset) => (
           <button
@@ -81,8 +81,8 @@ export function ReportButton({ target, currentUserId }: ReportButtonProps) {
             onClick={() => setReason(preset)}
             className={
               reason === preset
-                ? "border border-ogien/60 bg-ogien/10 px-2 py-1 text-xs text-ogien"
-                : "border border-zinc-800 px-2 py-1 text-xs text-zinc-400 hover:border-zinc-600"
+                ? "border border-danger/60 bg-danger/10 px-2 py-1 text-xs text-danger"
+                : "border border-stone-800 px-2 py-1 text-xs text-stone-400 hover:border-stone-600"
             }
           >
             {preset}
@@ -95,18 +95,18 @@ export function ReportButton({ target, currentUserId }: ReportButtonProps) {
         rows={2}
         maxLength={400}
         placeholder="Szczegóły (opcjonalnie)"
-        className="resize-none border border-zinc-800 bg-black px-2 py-1.5 text-xs text-zinc-100 outline-none focus:border-ogien"
+        className="resize-none border border-stone-800 bg-base-bg px-2 py-1.5 text-xs text-stone-100 outline-none focus:border-ogien"
       />
-      {error && <p className="text-xs text-ogien">{error}</p>}
+      {error && <p className="text-xs text-danger">{error}</p>}
       <div className="flex items-center gap-2">
         <button
           onClick={handleSubmit}
           disabled={isSubmitting || !reason}
-          className="border border-ogien bg-ogien/10 px-3 py-1.5 text-xs text-ogien disabled:opacity-40"
+          className="border border-danger bg-danger/10 px-3 py-1.5 text-xs text-danger disabled:opacity-40"
         >
           {isSubmitting ? "Wysyłam…" : "Wyślij zgłoszenie"}
         </button>
-        <button onClick={() => setIsOpen(false)} className="text-xs text-zinc-600 hover:text-zinc-300">
+        <button onClick={() => setIsOpen(false)} className="text-xs text-stone-600 hover:text-stone-300">
           Anuluj
         </button>
       </div>

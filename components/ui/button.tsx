@@ -10,13 +10,14 @@ const buttonVariants = cva(
       variant: {
         // Default stays zinc/bordered, deliberately NOT orange — orange is
         // reserved for the 🔥 mechanic, badges, and active states only.
-        default: "border border-zinc-800 bg-zinc-950 text-zinc-50 hover:border-zinc-600",
-        outline: "border border-zinc-800 bg-transparent text-zinc-300 hover:border-zinc-600 hover:text-zinc-50",
-        ghost: "text-zinc-400 hover:text-zinc-100",
-        link: "text-zinc-100 underline-offset-4 hover:underline hover:text-ogien",
+        default: "border border-stone-800 bg-stone-950 text-stone-50 hover:border-stone-600",
+        outline: "border border-stone-800 bg-transparent text-stone-300 hover:border-stone-600 hover:text-stone-50",
+        ghost: "text-stone-400 hover:text-stone-100",
+        link: "text-stone-100 underline-offset-4 hover:underline hover:text-ogien",
         // Reserved for genuine 🔥/active-state affordances.
         accent: "border border-ogien/50 bg-ogien/10 text-ogien hover:border-ogien",
-        destructive: "border border-ogien bg-ogien/10 text-ogien hover:bg-ogien/20",
+        // Destructive uses róż, split from the accent so "Usuń" never reads as reward.
+        destructive: "border border-danger bg-danger/10 text-danger hover:bg-danger/20",
       },
       size: {
         default: "h-9 px-4 py-2",

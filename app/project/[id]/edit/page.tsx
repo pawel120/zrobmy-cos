@@ -166,33 +166,33 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
   }
 
   if (!project) {
-    return <main className="mx-auto max-w-2xl px-4 py-10 text-sm text-zinc-600">{error || "Ładowanie…"}</main>;
+    return <main className="mx-auto max-w-2xl px-4 py-10 text-sm text-stone-600">{error || "Ładowanie…"}</main>;
   }
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-1 text-xl font-semibold text-zinc-50">Edytuj projekt</h1>
+      <h1 className="mb-1 text-xl font-semibold text-stone-50">Edytuj projekt</h1>
       {isAdminEdit ? (
         <p className="mb-8 text-sm text-ogien">
           Tryb admina — edytujesz cudzy projekt. Zmiany są natychmiastowe.
         </p>
       ) : (
-        <p className="mb-8 text-sm text-zinc-500">Zmień co trzeba albo usuń, jeśli projekt umarł.</p>
+        <p className="mb-8 text-sm text-stone-500">Zmień co trzeba albo usuń, jeśli projekt umarł.</p>
       )}
 
       <form onSubmit={handleSave} className="flex flex-col gap-5">
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Tytuł
           <input
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             maxLength={120}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Opis
           <textarea
             required
@@ -200,11 +200,11 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
             maxLength={2000}
-            className="resize-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="resize-none border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           />
         </label>
 
-        <fieldset className="flex flex-col gap-1 text-xs text-zinc-500">
+        <fieldset className="flex flex-col gap-1 text-xs text-stone-500">
           <legend className="mb-1">Faza projektu</legend>
           <div className="flex flex-wrap gap-2">
             {PHASE_OPTIONS.map((opt) => (
@@ -215,7 +215,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
                 className={
                   phase === opt.value
                     ? "border border-ogien/60 bg-ogien/10 px-3 py-1.5 text-sm text-ogien"
-                    : "border border-zinc-800 px-3 py-1.5 text-sm text-zinc-400 hover:border-zinc-600"
+                    : "border border-stone-800 px-3 py-1.5 text-sm text-stone-400 hover:border-stone-600"
                 }
               >
                 {opt.label}
@@ -224,25 +224,25 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
           </div>
         </fieldset>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Kogo szukacie (oddziel przecinkami)
           <input
             value={rolesNeeded}
             onChange={(e) => setRolesNeeded(e.target.value)}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Tagi (oddziel przecinkami)
           <input
             value={tags}
             onChange={(e) => setTags(e.target.value)}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           />
         </label>
 
-        {error && <p className="text-xs text-ogien">{error}</p>}
+        {error && <p className="text-xs text-danger">{error}</p>}
 
         <div className="flex items-center justify-between">
           <button type="submit" disabled={isSaving} className="btn-primary">
@@ -256,8 +256,8 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
             disabled={isDeleting}
             className={
               confirmingDelete
-                ? "border border-ogien bg-ogien/10 px-3 py-2 text-sm text-ogien"
-                : "border border-zinc-800 px-3 py-2 text-sm text-zinc-500 hover:border-ogien hover:text-ogien"
+                ? "border border-danger bg-danger/10 px-3 py-2 text-sm text-danger"
+                : "border border-stone-800 px-3 py-2 text-sm text-stone-500 hover:border-danger hover:text-danger"
             }
           >
             {isDeleting ? "Usuwam…" : confirmingDelete ? "Na pewno? Kliknij znowu" : "Usuń projekt"}

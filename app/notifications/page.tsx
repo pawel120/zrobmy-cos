@@ -86,25 +86,25 @@ export default function NotificationsPage() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
       {toast && (
-        <div className="animate-toast-in fixed left-1/2 top-4 z-50 flex -translate-x-1/2 items-center gap-2 border border-ogien/50 bg-black px-4 py-2 text-sm text-zinc-100 shadow-lg">
+        <div className="animate-toast-in fixed left-1/2 top-4 z-50 flex -translate-x-1/2 items-center gap-2 border border-ogien/50 bg-base-bg px-4 py-2 text-sm text-stone-100 shadow-lg">
           <span aria-hidden>{TYPE_ICON[toast.type]}</span>
           <span>{toast.message}</span>
         </div>
       )}
 
       <div className="hairline flex items-center justify-between pb-4">
-        <h1 className="text-lg font-semibold text-zinc-50">Powiadomienia</h1>
-        <button onClick={markAllRead} className="text-xs text-zinc-500 hover:text-ogien">
+        <h1 className="text-lg font-semibold text-stone-50">Powiadomienia</h1>
+        <button onClick={markAllRead} className="text-xs text-stone-500 hover:text-ogien">
           Oznacz wszystkie jako przeczytane
         </button>
       </div>
 
       {isLoading ? (
-        <p className="py-6 text-sm text-zinc-600">Ładowanie…</p>
+        <p className="py-6 text-sm text-stone-600">Ładowanie…</p>
       ) : notifications.length === 0 ? (
-        <p className="py-6 text-sm text-zinc-600">Na razie cisza. Wróć tu, gdy coś się wydarzy.</p>
+        <p className="py-6 text-sm text-stone-600">Na razie cisza. Wróć tu, gdy coś się wydarzy.</p>
       ) : (
-        <ul className="divide-y divide-zinc-800">
+        <ul className="divide-y divide-stone-800">
           {notifications.map((n) => (
             <li key={n.id}>
               <Link
@@ -115,8 +115,8 @@ export default function NotificationsPage() {
                   {TYPE_ICON[n.type]}
                 </span>
                 <div className="flex-1">
-                  <p className="text-sm text-zinc-200">{n.message}</p>
-                  <p className="mt-0.5 text-xs text-zinc-600">
+                  <p className="text-sm text-stone-200">{n.message}</p>
+                  <p className="mt-0.5 text-xs text-stone-600">
                     {new Date(n.created_at).toLocaleString("pl-PL")}
                   </p>
                 </div>

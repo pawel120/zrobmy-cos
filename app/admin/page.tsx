@@ -81,26 +81,26 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10">
-      <h1 className="mb-1 text-xl font-semibold text-zinc-50">Panel admina</h1>
-      <p className="mb-6 text-sm text-zinc-500">Profile, projekty i zgłoszenia. Edycja redaguje treść, shadowban ukrywa bez informowania właściciela.</p>
+      <h1 className="mb-1 text-xl font-semibold text-stone-50">Panel admina</h1>
+      <p className="mb-6 text-sm text-stone-500">Profile, projekty i zgłoszenia. Edycja redaguje treść, shadowban ukrywa bez informowania właściciela.</p>
 
       <div className="hairline mb-4 flex items-center justify-between pb-3">
         <div className="flex gap-4 text-sm">
           <a
             href="/admin?tab=profiles"
-            className={tab === "profiles" ? "text-ogien" : "text-zinc-500 hover:text-zinc-300"}
+            className={tab === "profiles" ? "text-ogien" : "text-stone-500 hover:text-stone-300"}
           >
             Profile
           </a>
           <a
             href="/admin?tab=projects"
-            className={tab === "projects" ? "text-ogien" : "text-zinc-500 hover:text-zinc-300"}
+            className={tab === "projects" ? "text-ogien" : "text-stone-500 hover:text-stone-300"}
           >
             Projekty
           </a>
           <a
             href="/admin?tab=reports"
-            className={`relative ${tab === "reports" ? "text-ogien" : "text-zinc-500 hover:text-zinc-300"}`}
+            className={`relative ${tab === "reports" ? "text-ogien" : "text-stone-500 hover:text-stone-300"}`}
           >
             Zgłoszenia
             {openReportCount > 0 && (
@@ -118,7 +118,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               name="q"
               defaultValue={q}
               placeholder="Szukaj…"
-              className="border border-zinc-800 bg-zinc-950 px-2 py-1 text-sm text-zinc-100 outline-none focus:border-ogien"
+              className="border border-stone-800 bg-stone-950 px-2 py-1 text-sm text-stone-100 outline-none focus:border-ogien"
             />
           </form>
         )}
@@ -127,27 +127,27 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
       {tab === "profiles" && (
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="hairline text-xs uppercase tracking-wide text-zinc-600">
+            <tr className="hairline text-xs uppercase tracking-wide text-stone-600">
               <th className="pb-2 font-normal">Użytkownik</th>
               <th className="pb-2 font-normal">Hype</th>
               <th className="pb-2 font-normal">Status</th>
               <th className="pb-2 font-normal">Akcje</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-900">
+          <tbody className="divide-y divide-stone-900">
             {profiles.map((p) => (
               <tr key={p.id}>
                 <td className="py-2">
-                  <a href={`/user/${p.id}`} className="text-zinc-200 hover:text-ogien hover:underline">
+                  <a href={`/user/${p.id}`} className="text-stone-200 hover:text-ogien hover:underline">
                     @{p.username}
                   </a>
                 </td>
-                <td className="py-2 text-zinc-400">{p.hype_score}</td>
+                <td className="py-2 text-stone-400">{p.hype_score}</td>
                 <td className="py-2">
                   {p.is_shadowbanned ? (
-                    <span className="text-ogien">shadowban</span>
+                    <span className="text-danger">shadowban</span>
                   ) : (
-                    <span className="text-zinc-600">aktywny</span>
+                    <span className="text-stone-600">aktywny</span>
                   )}
                 </td>
                 <td className="py-2">
@@ -157,7 +157,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             ))}
             {profiles.length === 0 && (
               <tr>
-                <td colSpan={4} className="py-6 text-center text-zinc-600">
+                <td colSpan={4} className="py-6 text-center text-stone-600">
                   Brak wyników.
                 </td>
               </tr>
@@ -169,7 +169,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
       {tab === "projects" && (
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="hairline text-xs uppercase tracking-wide text-zinc-600">
+            <tr className="hairline text-xs uppercase tracking-wide text-stone-600">
               <th className="pb-2 font-normal">Projekt</th>
               <th className="pb-2 font-normal">Autor</th>
               <th className="pb-2 font-normal">🔥</th>
@@ -177,29 +177,29 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               <th className="pb-2 font-normal">Akcje</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-900">
+          <tbody className="divide-y divide-stone-900">
             {projects.map((proj) => (
               <tr key={proj.id}>
                 <td className="py-2">
-                  <a href={`/project/${proj.id}`} className="text-zinc-200 hover:text-ogien hover:underline">
+                  <a href={`/project/${proj.id}`} className="text-stone-200 hover:text-ogien hover:underline">
                     {proj.title}
                   </a>
                 </td>
                 <td className="py-2">
                   {proj.owner ? (
-                    <a href={`/user/${proj.owner.id}`} className="text-zinc-500 hover:text-ogien">
+                    <a href={`/user/${proj.owner.id}`} className="text-stone-500 hover:text-ogien">
                       @{proj.owner.username}
                     </a>
                   ) : (
                     "—"
                   )}
                 </td>
-                <td className="py-2 text-zinc-400">{proj.fire_count}</td>
+                <td className="py-2 text-stone-400">{proj.fire_count}</td>
                 <td className="py-2">
                   {proj.is_shadowbanned ? (
-                    <span className="text-ogien">shadowban</span>
+                    <span className="text-danger">shadowban</span>
                   ) : (
-                    <span className="text-zinc-600">aktywny</span>
+                    <span className="text-stone-600">aktywny</span>
                   )}
                 </td>
                 <td className="py-2">
@@ -209,7 +209,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             ))}
             {projects.length === 0 && (
               <tr>
-                <td colSpan={5} className="py-6 text-center text-zinc-600">
+                <td colSpan={5} className="py-6 text-center text-stone-600">
                   Brak wyników.
                 </td>
               </tr>
@@ -236,14 +236,14 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               <div key={r.id} className="card">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm text-zinc-200">
+                    <p className="text-sm text-stone-200">
                       Zgłoszono{" "}
                       <a href={targetHref} className="text-ogien hover:underline">
                         {targetLabel}
                       </a>
                     </p>
-                    <p className="mt-1 text-sm text-zinc-400">{r.reason}</p>
-                    <p className="mt-1 text-xs text-zinc-600">
+                    <p className="mt-1 text-sm text-stone-400">{r.reason}</p>
+                    <p className="mt-1 text-xs text-stone-600">
                       od {r.reporter ? `@${r.reporter.username}` : "usunięty użytkownik"} ·{" "}
                       {new Date(r.created_at).toLocaleString("pl-PL")}
                     </p>
@@ -254,7 +254,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             );
           })}
           {reports.length === 0 && (
-            <p className="py-6 text-center text-sm text-zinc-600">Brak otwartych zgłoszeń. Czysto tu.</p>
+            <p className="py-6 text-center text-sm text-stone-600">Brak otwartych zgłoszeń. Czysto tu.</p>
           )}
         </div>
       )}

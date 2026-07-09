@@ -30,32 +30,32 @@ export function ReportRowActions({ reportId }: ReportRowActionsProps) {
     });
   }
 
-  if (resolved) return <span className="text-xs text-zinc-600">Gotowe</span>;
+  if (resolved) return <span className="text-xs text-stone-600">Gotowe</span>;
 
   return (
     <div className="flex items-center gap-2">
       <button
         onClick={() => respond("resolved", true)}
         disabled={isPending}
-        className="border border-ogien bg-ogien/10 px-2 py-1 text-xs text-ogien disabled:opacity-40"
+        className="border border-danger bg-danger/10 px-2 py-1 text-xs text-danger disabled:opacity-40"
       >
         Shadowban
       </button>
       <button
         onClick={() => respond("resolved", false)}
         disabled={isPending}
-        className="border border-zinc-800 px-2 py-1 text-xs text-zinc-400 hover:border-zinc-600 disabled:opacity-40"
+        className="border border-stone-800 px-2 py-1 text-xs text-stone-400 hover:border-stone-600 disabled:opacity-40"
       >
         Rozwiąż
       </button>
       <button
         onClick={() => respond("dismissed", false)}
         disabled={isPending}
-        className="border border-zinc-800 px-2 py-1 text-xs text-zinc-600 hover:border-zinc-600 disabled:opacity-40"
+        className="border border-stone-800 px-2 py-1 text-xs text-stone-600 hover:border-stone-600 disabled:opacity-40"
       >
         Odrzuć
       </button>
-      {error && <span className="text-xs text-ogien">{error}</span>}
+      {error && <span className="text-xs text-danger">{error}</span>}
     </div>
   );
 }

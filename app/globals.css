@@ -114,6 +114,11 @@
   .tag {
     @apply rounded-sm border border-stone-800 px-2 py-0.5 text-xs text-stone-400;
   }
+
+  /* Fiolet status/phase tag — community colour (rule R2: fiolet = status) */
+  .tag-phase {
+    @apply rounded-sm border border-fiolet/40 bg-fiolet/10 px-2 py-0.5 text-xs text-fiolet;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -33,8 +33,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     <main className="mx-auto max-w-2xl px-4 py-10">
       <div className="hairline mb-6 flex items-center justify-between pb-4">
         <div>
-          <h1 className="text-xl font-semibold text-zinc-50">BuildTogether</h1>
-          <p className="text-sm text-zinc-500">Znajdź projekt albo znajdź ekipę.</p>
+          <h1 className="text-xl font-semibold text-stone-50">BuildTogether</h1>
+          <p className="text-sm text-stone-500">Znajdź projekt albo znajdź ekipę.</p>
         </div>
         {user ? (
           <Link href="/project/new" className="btn-primary">
@@ -51,13 +51,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <div className="mb-5 flex gap-4 text-sm">
           <Link
             href="/?sort=najgorętsze"
-            className={sort === "najgorętsze" ? "text-ogien" : "text-zinc-500 hover:text-zinc-300"}
+            className={sort === "najgorętsze" ? "text-ogien" : "text-stone-500 hover:text-stone-300"}
           >
             🔥 Najgorętsze
           </Link>
           <Link
             href="/?sort=najnowsze"
-            className={sort === "najnowsze" ? "text-ogien" : "text-zinc-500 hover:text-zinc-300"}
+            className={sort === "najnowsze" ? "text-ogien" : "text-stone-500 hover:text-stone-300"}
           >
             Najnowsze
           </Link>
@@ -67,8 +67,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       {!user ? (
         <div className="space-y-4">
           <div className="card text-center">
-            <h2 className="text-lg font-semibold text-zinc-50">Witaj 👋</h2>
-            <p className="mt-2 text-sm text-zinc-400">
+            <h2 className="text-lg font-semibold text-stone-50">Witaj 👋</h2>
+            <p className="mt-2 text-sm text-stone-400">
               Zaloguj się, żeby przeglądać projekty, szukać ekipy albo wrzucić swój pomysł.
             </p>
             <div className="mt-4 flex justify-center gap-3">
@@ -82,7 +82,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </div>
         </div>
       ) : projects.length === 0 ? (
-        <div className="card text-center text-sm text-zinc-500">
+        <div className="card text-center text-sm text-stone-500">
           Cicho tu. Bądź pierwszy —{" "}
           <Link href="/project/new" className="text-ogien underline">
             wrzuć projekt

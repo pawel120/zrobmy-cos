@@ -71,13 +71,13 @@ export function FireButton({
         className={
           hasFired
             ? "btn-ogien accent-surface animate-fire-pop cursor-default"
-            : "btn-ogien border-zinc-800 text-zinc-400 hover:border-ogien hover:text-ogien"
+            : "btn-ogien border-stone-800 text-stone-400 hover:border-ogien hover:text-ogien"
         }
       >
         <span aria-hidden>🔥</span>
         <span>{fireCount}</span>
       </button>
-      {error && <p className="text-xs text-ogien">{error}</p>}
+      {error && <p className="text-xs text-danger">{error}</p>}
     </div>
   );
 }

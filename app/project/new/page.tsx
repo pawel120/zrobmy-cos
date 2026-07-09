@@ -95,28 +95,28 @@ export default function NewProjectPage() {
   }
 
   if (userId === undefined) {
-    return <main className="mx-auto max-w-2xl px-4 py-10 text-sm text-zinc-600">Ładowanie…</main>;
+    return <main className="mx-auto max-w-2xl px-4 py-10 text-sm text-stone-600">Ładowanie…</main>;
   }
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-1 text-xl font-semibold text-zinc-50">Wrzuć swój projekt</h1>
-      <p className="mb-8 text-sm text-zinc-500">Krótko, konkretnie. Bez korpo-gadki.</p>
+      <h1 className="mb-1 text-xl font-semibold text-stone-50">Wrzuć swój projekt</h1>
+      <p className="mb-8 text-sm text-stone-500">Krótko, konkretnie. Bez korpo-gadki.</p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Tytuł
           <input
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             maxLength={120}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
             placeholder="Np. Appka do dzielenia rachunków na wyjazdach"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Opis
           <textarea
             required
@@ -124,12 +124,12 @@ export default function NewProjectPage() {
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
             maxLength={2000}
-            className="resize-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="resize-none border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
             placeholder="Co budujecie, na jakim jesteście etapie, dlaczego to fajne."
           />
         </label>
 
-        <fieldset className="flex flex-col gap-1 text-xs text-zinc-500">
+        <fieldset className="flex flex-col gap-1 text-xs text-stone-500">
           <legend className="mb-1">Faza projektu</legend>
           <div className="flex flex-wrap gap-2">
             {PHASE_OPTIONS.map((opt) => (
@@ -140,7 +140,7 @@ export default function NewProjectPage() {
                 className={
                   phase === opt.value
                     ? "border border-ogien/60 bg-ogien/10 px-3 py-1.5 text-sm text-ogien"
-                    : "border border-zinc-800 px-3 py-1.5 text-sm text-zinc-400 hover:border-zinc-600"
+                    : "border border-stone-800 px-3 py-1.5 text-sm text-stone-400 hover:border-stone-600"
                 }
               >
                 {opt.label}
@@ -149,27 +149,27 @@ export default function NewProjectPage() {
           </div>
         </fieldset>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Kogo szukacie (oddziel przecinkami)
           <input
             value={rolesNeeded}
             onChange={(e) => setRolesNeeded(e.target.value)}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
             placeholder="Frontend, Designer, ML"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Tagi (oddziel przecinkami)
           <input
             value={tags}
             onChange={(e) => setTags(e.target.value)}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
             placeholder="AI, fintech, mobile"
           />
         </label>
 
-        {error && <p className="text-xs text-ogien">{error}</p>}
+        {error && <p className="text-xs text-danger">{error}</p>}
 
         <button type="submit" disabled={isSubmitting} className="btn-primary self-start">
           {isSubmitting ? "Wrzucam…" : "Wrzuć projekt"}

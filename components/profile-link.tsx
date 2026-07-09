@@ -17,7 +17,7 @@ export function ProfileLink({ profile, size = "md" }: ProfileLinkProps) {
       className="group inline-flex items-center gap-2 no-underline"
     >
       <span
-        className={`flex ${avatarSize} shrink-0 items-center justify-center overflow-hidden rounded-none border border-zinc-800 bg-zinc-900 font-mono text-zinc-400`}
+        className={`flex ${avatarSize} shrink-0 items-center justify-center overflow-hidden rounded-none border border-stone-800 bg-stone-900 font-mono text-stone-400`}
       >
         {profile.avatar_url ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -26,7 +26,7 @@ export function ProfileLink({ profile, size = "md" }: ProfileLinkProps) {
           profile.username.slice(0, 2).toUpperCase()
         )}
       </span>
-      <span className="text-zinc-100 group-hover:text-ogien group-hover:underline">
+      <span className="text-stone-100 group-hover:text-ogien group-hover:underline">
         {profile.display_name || profile.username}
       </span>
     </Link>

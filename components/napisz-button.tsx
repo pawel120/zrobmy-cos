@@ -45,7 +45,7 @@ export function NapiszButton({ targetUserId, currentUserId }: NapiszButtonProps)
       <button onClick={handleClick} disabled={isLoading} className="btn-primary">
         {isLoading ? "Otwieram…" : "[Napisz]"}
       </button>
-      {error && <p className="text-xs text-ogien">{error}</p>}
+      {error && <p className="text-xs text-danger">{error}</p>}
     </div>
   );
 }

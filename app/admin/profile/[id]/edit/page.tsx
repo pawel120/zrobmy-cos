@@ -116,19 +116,19 @@ export default function AdminEditProfilePage({ params }: AdminEditProfileProps) 
   }
 
   if (!profile) {
-    return <main className="mx-auto max-w-2xl px-4 py-10 text-sm text-zinc-600">{error || "Ładowanie…"}</main>;
+    return <main className="mx-auto max-w-2xl px-4 py-10 text-sm text-stone-600">{error || "Ładowanie…"}</main>;
   }
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-1 text-xl font-semibold text-zinc-50">Edytuj profil</h1>
+      <h1 className="mb-1 text-xl font-semibold text-stone-50">Edytuj profil</h1>
       <p className="mb-8 text-sm text-ogien">
-        Tryb admina — redagujesz profil <span className="text-zinc-200">@{profile.username}</span>. Zmiany są
+        Tryb admina — redagujesz profil <span className="text-stone-200">@{profile.username}</span>. Zmiany są
         natychmiastowe.
       </p>
 
       <section className="hairline mb-6 flex items-center gap-4 pb-6">
-        <div className="flex h-16 w-16 items-center justify-center overflow-hidden border border-zinc-800 bg-zinc-900 font-mono text-lg text-zinc-400">
+        <div className="flex h-16 w-16 items-center justify-center overflow-hidden border border-stone-800 bg-stone-900 font-mono text-lg text-stone-400">
           {avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
@@ -140,7 +140,7 @@ export default function AdminEditProfilePage({ params }: AdminEditProfileProps) 
           <button
             type="button"
             onClick={() => setAvatarUrl(null)}
-            className="border border-zinc-800 px-3 py-2 text-sm text-zinc-400 hover:border-ogien hover:text-ogien"
+            className="border border-stone-800 px-3 py-2 text-sm text-stone-400 hover:border-ogien hover:text-ogien"
           >
             Wyczyść avatar
           </button>
@@ -148,62 +148,62 @@ export default function AdminEditProfilePage({ params }: AdminEditProfileProps) 
       </section>
 
       <form onSubmit={handleSave} className="flex flex-col gap-5">
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Wyświetlana nazwa
           <input
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             maxLength={60}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Wydział
           <input
             value={faculty}
             onChange={(e) => setFaculty(e.target.value)}
             maxLength={80}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           O sobie
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={4}
             maxLength={500}
-            className="resize-none border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="resize-none border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Potrafię (oddziel przecinkami)
           <input
             value={skillsHave}
             onChange={(e) => setSkillsHave(e.target.value)}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           Szukam (oddziel przecinkami)
           <input
             value={skillsWant}
             onChange={(e) => setSkillsWant(e.target.value)}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           />
         </label>
 
-        {error && <p className="text-xs text-ogien">{error}</p>}
+        {error && <p className="text-xs text-danger">{error}</p>}
 
         <div className="flex items-center gap-3">
           <button type="submit" disabled={isSaving} className="btn-primary self-start">
             {isSaving ? "Zapisuję…" : "Zapisz zmiany"}
           </button>
-          <a href="/admin?tab=profiles" className="text-sm text-zinc-500 hover:text-zinc-300">
+          <a href="/admin?tab=profiles" className="text-sm text-stone-500 hover:text-stone-300">
             Anuluj
           </a>
         </div>

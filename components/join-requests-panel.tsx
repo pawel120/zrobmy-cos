@@ -84,7 +84,7 @@ export function JoinRequestsPanel({ projectId }: JoinRequestsPanelProps) {
 
   return (
     <section className="hairline py-6">
-      <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+      <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-stone-500">
         Prośby o dołączenie ({requests.length})
       </h2>
       <div className="flex flex-col gap-3">
@@ -103,17 +103,17 @@ export function JoinRequestsPanel({ projectId }: JoinRequestsPanelProps) {
                 <button
                   onClick={() => respond(req.id, false)}
                   disabled={respondingId === req.id}
-                  className="border border-zinc-800 px-3 py-1.5 text-sm text-zinc-400 hover:border-zinc-600"
+                  className="border border-stone-800 px-3 py-1.5 text-sm text-stone-400 hover:border-stone-600"
                 >
                   Odrzuć
                 </button>
               </div>
             </div>
-            {req.message && <p className="mt-2 text-sm text-zinc-400">{req.message}</p>}
+            {req.message && <p className="mt-2 text-sm text-stone-400">{req.message}</p>}
           </div>
         ))}
       </div>
-      {error && <p className="mt-2 text-xs text-ogien">{error}</p>}
+      {error && <p className="mt-2 text-xs text-danger">{error}</p>}
     </section>
   );
 }

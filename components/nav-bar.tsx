@@ -78,12 +78,12 @@ export function NavBar() {
   }
 
   const linkClass = (href: string) =>
-    pathname === href ? "text-ogien" : "text-zinc-500 hover:text-zinc-300";
+    pathname === href ? "text-ogien" : "text-stone-500 hover:text-stone-300";
 
   return (
     <header className="hairline sticky top-0 z-40 bg-base-bg/90 backdrop-blur">
       <nav className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3 text-sm">
-        <Link href="/" className="font-display font-semibold text-zinc-50">
+        <Link href="/" className="font-display font-semibold text-stone-50">
           BuildTogether
         </Link>
 
@@ -108,7 +108,7 @@ export function NavBar() {
               <Link href="/settings" className={linkClass("/settings")}>
                 Ustawienia
               </Link>
-              <button onClick={handleLogout} className="text-zinc-500 hover:text-ogien">
+              <button onClick={handleLogout} className="text-stone-500 hover:text-ogien">
                 Wyloguj
               </button>
             </>

@@ -67,7 +67,7 @@ export default async function UserProfilePage({ params }: UserPageProps) {
       {/* ---- Header ---------------------------------------------------- */}
       <section className="hairline flex items-start justify-between gap-4 pb-6">
         <div className="flex items-start gap-4">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center border border-zinc-800 bg-zinc-900 font-mono text-lg text-zinc-400">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center border border-stone-800 bg-stone-900 font-mono text-lg text-stone-400">
             {typedProfile.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -80,12 +80,12 @@ export default async function UserProfilePage({ params }: UserPageProps) {
             )}
           </div>
           <div>
-            <h1 className="text-xl font-semibold text-zinc-50">
+            <h1 className="text-xl font-semibold text-stone-50">
               {typedProfile.display_name || typedProfile.username}
             </h1>
-            <p className="text-sm text-zinc-500">@{typedProfile.username}</p>
+            <p className="text-sm text-stone-500">@{typedProfile.username}</p>
             {typedProfile.faculty && (
-              <p className="mt-1 text-sm text-zinc-400">{typedProfile.faculty}</p>
+              <p className="mt-1 text-sm text-stone-400">{typedProfile.faculty}</p>
             )}
           </div>
         </div>
@@ -105,7 +105,7 @@ export default async function UserProfilePage({ params }: UserPageProps) {
       {/* ---- Bio --------------------------------------------------------- */}
       {typedProfile.bio && (
         <section className="hairline py-6">
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-stone-300">
             {typedProfile.bio}
           </p>
         </section>
@@ -114,7 +114,7 @@ export default async function UserProfilePage({ params }: UserPageProps) {
       {/* ---- Skills ------------------------------------------------------ */}
       <section className="hairline grid grid-cols-1 gap-6 py-6 sm:grid-cols-2">
         <div>
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-stone-500">
             Potrafię
           </h2>
           <div className="flex flex-wrap gap-1.5">
@@ -125,12 +125,12 @@ export default async function UserProfilePage({ params }: UserPageProps) {
                 </span>
               ))
             ) : (
-              <p className="text-sm text-zinc-600">Brak dodanych umiejętności.</p>
+              <p className="text-sm text-stone-600">Brak dodanych umiejętności.</p>
             )}
           </div>
         </div>
         <div>
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-stone-500">
             Szukam
           </h2>
           <div className="flex flex-wrap gap-1.5">
@@ -141,7 +141,7 @@ export default async function UserProfilePage({ params }: UserPageProps) {
                 </span>
               ))
             ) : (
-              <p className="text-sm text-zinc-600">Nic obecnie nie szuka.</p>
+              <p className="text-sm text-stone-600">Nic obecnie nie szuka.</p>
             )}
           </div>
         </div>
@@ -149,11 +149,11 @@ export default async function UserProfilePage({ params }: UserPageProps) {
 
       {/* ---- Projects ------------------------------------------------------ */}
       <section className="py-6">
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-stone-500">
           Projekty ({projects.length})
         </h2>
         {projects.length === 0 ? (
-          <p className="text-sm text-zinc-600">Jeszcze nic tu nie ma.</p>
+          <p className="text-sm text-stone-600">Jeszcze nic tu nie ma.</p>
         ) : (
           <div className="flex flex-col gap-3">
             {projects.map((project) => (

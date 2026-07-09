@@ -54,7 +54,7 @@ export function AdminRowActions({
       <button
         onClick={handleToggle}
         disabled={isPending}
-        className="border border-zinc-800 px-2 py-1 text-xs text-zinc-400 hover:border-zinc-600 disabled:opacity-40"
+        className="border border-stone-800 px-2 py-1 text-xs text-stone-400 hover:border-stone-600 disabled:opacity-40"
       >
         {isShadowbanned ? "Cofnij shadowban" : "Shadowban"}
       </button>
@@ -65,14 +65,14 @@ export function AdminRowActions({
           disabled={isPending}
           className={
             confirmingDelete
-              ? "border border-ogien bg-ogien/10 px-2 py-1 text-xs text-ogien disabled:opacity-40"
-              : "border border-zinc-800 px-2 py-1 text-xs text-zinc-400 hover:border-ogien hover:text-ogien disabled:opacity-40"
+              ? "border border-danger bg-danger/10 px-2 py-1 text-xs text-danger disabled:opacity-40"
+              : "border border-stone-800 px-2 py-1 text-xs text-stone-400 hover:border-danger hover:text-danger disabled:opacity-40"
           }
         >
           {confirmingDelete ? deleteConfirmLabel : "Usuń"}
         </button>
       )}
-      {error && <span className="text-xs text-ogien">{error}</span>}
+      {error && <span className="text-xs text-danger">{error}</span>}
     </div>
   );
 }

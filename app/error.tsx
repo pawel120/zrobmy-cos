@@ -18,8 +18,8 @@ export default function GlobalError({
   return (
     <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-sm flex-col items-center justify-center px-4 text-center">
       <p className="font-display text-sm text-ogien">Coś się posypało</p>
-      <h1 className="mt-2 text-xl font-semibold text-zinc-50">Wystąpił błąd</h1>
-      <p className="mt-2 text-sm text-zinc-500">
+      <h1 className="mt-2 text-xl font-semibold text-stone-50">Wystąpił błąd</h1>
+      <p className="mt-2 text-sm text-stone-500">
         To nie Twoja wina. Spróbuj jeszcze raz — jeśli się powtarza, daj nam znać.
       </p>
       <button onClick={reset} className="btn-primary mt-6">

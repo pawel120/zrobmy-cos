@@ -105,15 +105,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     <main className="mx-auto max-w-2xl px-4 py-10">
       <section className="hairline pb-6">
         <div className="flex items-center justify-between">
-          <span className="tag">{PHASE_LABELS[typedProject.phase]}</span>
+          <span className="tag-phase">{PHASE_LABELS[typedProject.phase]}</span>
           {isOwner && (
-            <Link href={`/project/${typedProject.id}/edit`} className="text-xs text-zinc-500 hover:text-ogien">
+            <Link href={`/project/${typedProject.id}/edit`} className="text-xs text-stone-500 hover:text-ogien">
               Edytuj
             </Link>
           )}
           {!isOwner && <ReportButton target={{ reportedProjectId: typedProject.id }} currentUserId={authUser?.id ?? null} />}
         </div>
-        <h1 className="mt-3 text-2xl font-semibold text-zinc-50">{typedProject.title}</h1>
+        <h1 className="mt-3 text-2xl font-semibold text-stone-50">{typedProject.title}</h1>
         {owner && (
           <div className="mt-3">
             <ProfileLink profile={owner as Profile} />
@@ -122,14 +122,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </section>
 
       <section className="hairline py-6">
-        <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">
+        <p className="whitespace-pre-wrap text-sm leading-relaxed text-stone-300">
           {typedProject.description}
         </p>
       </section>
 
       {typedProject.roles_needed.length > 0 && (
         <section className="hairline py-6">
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-stone-500">
             Szukamy do zespołu
           </h2>
           <div className="flex flex-wrap gap-1.5">

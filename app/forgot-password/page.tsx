@@ -36,9 +36,9 @@ export default function ForgotPasswordPage() {
   if (sent) {
     return (
       <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-sm flex-col justify-center px-4">
-        <h1 className="mb-2 text-xl font-semibold text-zinc-50">Sprawdź skrzynkę</h1>
-        <p className="text-sm text-zinc-400">
-          Jeśli <span className="text-zinc-50">{email}</span> ma u nas konto, wysłaliśmy link do resetu hasła.
+        <h1 className="mb-2 text-xl font-semibold text-stone-50">Sprawdź skrzynkę</h1>
+        <p className="text-sm text-stone-400">
+          Jeśli <span className="text-stone-50">{email}</span> ma u nas konto, wysłaliśmy link do resetu hasła.
         </p>
       </main>
     );
@@ -46,31 +46,31 @@ export default function ForgotPasswordPage() {
 
   return (
     <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-sm flex-col justify-center px-4">
-      <h1 className="mb-1 text-xl font-semibold text-zinc-50">Zapomniałeś hasła?</h1>
-      <p className="mb-8 text-sm text-zinc-500">Wyślemy Ci link do ustawienia nowego.</p>
+      <h1 className="mb-1 text-xl font-semibold text-stone-50">Zapomniałeś hasła?</h1>
+      <p className="mb-8 text-sm text-stone-500">Wyślemy Ci link do ustawienia nowego.</p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <label className="flex flex-col gap-1 text-xs text-zinc-500">
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
           E-mail
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
             placeholder="ty@uczelnia.edu.pl"
           />
         </label>
 
-        {error && <p className="text-xs text-ogien">{error}</p>}
+        {error && <p className="text-xs text-danger">{error}</p>}
 
         <button type="submit" disabled={isLoading} className="btn-primary mt-2">
           {isLoading ? "Wysyłam…" : "Wyślij link"}
         </button>
       </form>
 
-      <p className="mt-8 text-sm text-zinc-500">
-        <Link href="/login" className="text-zinc-100 underline hover:text-ogien">
+      <p className="mt-8 text-sm text-stone-500">
+        <Link href="/login" className="text-stone-100 underline hover:text-ogien">
           Wróć do logowania
         </Link>
       </p>

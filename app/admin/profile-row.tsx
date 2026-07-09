@@ -13,7 +13,7 @@ export function ProfileRow({ id, isShadowbanned }: { id: string; isShadowbanned:
     <div className="flex items-center gap-3">
       <a
         href={`/admin/profile/${id}/edit`}
-        className="border border-zinc-800 px-2 py-1 text-xs text-zinc-400 hover:border-ogien hover:text-ogien"
+        className="border border-stone-800 px-2 py-1 text-xs text-stone-400 hover:border-ogien hover:text-ogien"
       >
         Edytuj
       </a>

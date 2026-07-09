@@ -176,13 +176,13 @@ export default function ChatPage({ params }: ChatPageProps) {
   }
 
   if (loadError && !otherUser) {
-    return <main className="mx-auto max-w-2xl px-4 py-10 text-sm text-ogien">{loadError}</main>;
+    return <main className="mx-auto max-w-2xl px-4 py-10 text-sm text-danger">{loadError}</main>;
   }
 
   return (
     <main className="mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-4 py-6">
       <header className="hairline flex items-center justify-between pb-4">
-        {otherUser ? <ProfileLink profile={otherUser} /> : <span className="text-zinc-600">Ładowanie…</span>}
+        {otherUser ? <ProfileLink profile={otherUser} /> : <span className="text-stone-600">Ładowanie…</span>}
       </header>
 
       <div className="flex-1 space-y-2 overflow-y-auto py-4">
@@ -193,8 +193,8 @@ export default function ChatPage({ params }: ChatPageProps) {
               <div
                 className={
                   isMine
-                    ? "max-w-[75%] border border-ogien/40 bg-ogien/10 px-3 py-2 text-sm text-zinc-100"
-                    : "max-w-[75%] border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-200"
+                    ? "max-w-[75%] border border-ogien/40 bg-ogien/10 px-3 py-2 text-sm text-stone-100"
+                    : "max-w-[75%] border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-200"
                 }
                 style={{ opacity: msg.pending ? 0.6 : 1 }}
               >
@@ -206,7 +206,7 @@ export default function ChatPage({ params }: ChatPageProps) {
         <div ref={scrollRef} />
       </div>
 
-      {loadError && <p className="pb-2 text-xs text-ogien">{loadError}</p>}
+      {loadError && <p className="pb-2 text-xs text-danger">{loadError}</p>}
 
       <form
         onSubmit={(e) => {
@@ -219,7 +219,7 @@ export default function ChatPage({ params }: ChatPageProps) {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Napisz coś…"
-          className="flex-1 border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-ogien"
+          className="flex-1 border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           maxLength={4000}
         />
         <button type="submit" disabled={!draft.trim() || isSending} className="btn-primary">
