@@ -584,6 +584,74 @@ as $$
 $$;
 
 -- ============================================================================
+-- Write throttling (server-side, in the database)
+-- The middleware rate limiter only covers /api/* reads; every write (messages,
+-- projects, fires, join_requests) goes straight from the browser to Supabase,
+-- so the only place a limit actually holds — regardless of how many serverless
+-- instances are running — is here, as BEFORE INSERT triggers.
+--
+-- Fires and join_requests are already bounded by their unique(…) constraints
+-- (one per user per project), so only message flooding and project spam need
+-- an explicit rate cap. security definer so the count sees ALL of the user's
+-- rows, not just the ones their RLS policy can select.
+-- ============================================================================
+create or replace function public.throttle_messages()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  recent int;
+begin
+  select count(*) into recent
+  from public.messages
+  where sender_id = new.sender_id
+    and created_at > now() - interval '1 minute';
+
+  if recent >= 20 then
+    raise exception 'Za dużo wiadomości w krótkim czasie. Odczekaj chwilę.'
+      using errcode = 'check_violation';
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists throttle_messages_trigger on public.messages;
+create trigger throttle_messages_trigger
+  before insert on public.messages
+  for each row execute function public.throttle_messages();
+
+create or replace function public.throttle_projects()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  recent int;
+begin
+  select count(*) into recent
+  from public.projects
+  where owner_id = new.owner_id
+    and created_at > now() - interval '1 hour';
+
+  if recent >= 5 then
+    raise exception 'Za dużo nowych projektów w krótkim czasie. Spróbuj później.'
+      using errcode = 'check_violation';
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists throttle_projects_trigger on public.projects;
+create trigger throttle_projects_trigger
+  before insert on public.projects
+  for each row execute function public.throttle_projects();
+
+-- ============================================================================
 -- Row Level Security
 -- ============================================================================
 alter table public.profiles enable row level security;

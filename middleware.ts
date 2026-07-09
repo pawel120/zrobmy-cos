@@ -3,9 +3,13 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 
 // ----------------------------------------------------------------------------
 // In-memory sliding-window rate limiter for /api/* routes.
-// NOTE: this is per-instance memory. On multi-instance deployments (Vercel
-// serverless, multiple containers) swap this for a shared store — Upstash
-// Redis is the drop-in choice — but the interface below stays identical.
+// SCOPE: this only guards the app's actual API routes (currently just the
+// /api/profiles read). Writes — messages, projects, fires, join_requests —
+// go straight from the browser to Supabase and never pass through here, so
+// they're throttled in the database instead (throttle_* triggers in
+// schema.sql). Don't add per-write limits here expecting them to fire.
+// NOTE: per-instance memory. On multi-instance serverless this is best-effort;
+// swap for a shared store (Upstash Redis) if the read limit must be exact.
 // ----------------------------------------------------------------------------
 type Bucket = { count: number; windowStart: number };
 const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
@@ -13,28 +17,9 @@ const RATE_LIMIT_MAX_REQUESTS = 60; // 60 req/min per identity per route group
 
 const buckets = new Map<string, Bucket>();
 
-function rateLimit(identity: string, routeGroup: string): { ok: boolean; remaining: number } {
-  const key = `${identity}:${routeGroup}`;
-  const now = Date.now();
-  const bucket = buckets.get(key);
-
-  if (!bucket || now - bucket.windowStart > RATE_LIMIT_WINDOW_MS) {
-    buckets.set(key, { count: 1, windowStart: now });
-    return { ok: true, remaining: RATE_LIMIT_MAX_REQUESTS - 1 };
-  }
-
-  bucket.count += 1;
-  if (bucket.count > RATE_LIMIT_MAX_REQUESTS) {
-    return { ok: false, remaining: 0 };
-  }
-  return { ok: true, remaining: RATE_LIMIT_MAX_REQUESTS - bucket.count };
-}
-
-// Stricter limits for spam-prone endpoints (chat + fire mechanic)
-const ROUTE_OVERRIDES: Record<string, number> = {
-  "/api/messages": 20,
-  "/api/fires": 10,
-};
+// Per-route-group overrides for the /api limiter. Empty today — every stricter
+// limit lives in the DB throttle triggers (see comment above).
+const ROUTE_OVERRIDES: Record<string, number> = {};
 
 // Periodically sweep stale buckets so the Map doesn't grow unbounded on
 // long-lived server instances.
