@@ -9,38 +9,38 @@
     /* shadcn/ui tokens — mapped onto the same OLED black / neon-orange
        palette as the rest of the app, NOT shadcn's default theme. Radius is
        0 everywhere: this app has no rounded corners by design. */
-    --background: 0 0% 0%;             /* #000000 */
-    --foreground: 0 0% 98%;            /* zinc-50 */
-    --card: 240 6% 6%;                 /* zinc-950-ish */
-    --card-foreground: 0 0% 98%;
-    --popover: 240 6% 6%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 240 5% 96%;             /* stays zinc, NOT orange — orange is reserved for 🔥 */
-    --primary-foreground: 240 6% 10%;
-    --secondary: 240 4% 16%;           /* zinc-800 */
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 4% 16%;
-    --muted-foreground: 240 5% 65%;    /* zinc-400 */
-    --accent: 16 100% 50%;             /* ogien — used only for explicit accent-intent components */
+    --background: 20 14% 4%;           /* #0c0a09 stone-950 — warm, replaces #000 */
+    --foreground: 48 8% 98%;           /* #fafaf9 stone-50 */
+    --card: 24 10% 10%;                /* #1c1917 stone-900 */
+    --card-foreground: 48 8% 98%;
+    --popover: 20 7% 15%;              /* #292524 stone-800 */
+    --popover-foreground: 48 8% 98%;
+    --primary: 48 8% 98%;              /* neutral — orange is the accent, not primary */
+    --primary-foreground: 24 10% 10%;
+    --secondary: 20 7% 15%;            /* stone-800 */
+    --secondary-foreground: 48 8% 98%;
+    --muted: 20 7% 15%;
+    --muted-foreground: 24 6% 64%;     /* #a8a29e stone-400 */
+    --accent: 16 100% 50%;             /* ogień #ff4500 — CTA + 🔥 + active */
     --accent-foreground: 0 0% 0%;
-    --destructive: 16 100% 50%;        /* reuses ogien red-orange, matches existing delete-confirm UI */
-    --destructive-foreground: 0 0% 0%;
-    --border: 240 4% 16%;              /* zinc-800 hairline, the app's universal 1px line */
-    --input: 240 4% 16%;
-    --ring: 16 100% 50%;               /* focus ring is always ogien, matches :focus-visible below */
-    --radius: 0px;
+    --destructive: 347 77% 50%;        /* róż #e11d48 — split from ogień (UX fix) */
+    --destructive-foreground: 0 0% 100%;
+    --border: 20 7% 15%;               /* #292524 stone-800 hairline, universal 1px line */
+    --input: 20 7% 15%;
+    --ring: 16 100% 50%;               /* focus ring stays ogień */
+    --radius: 2px;                     /* was 0 — barely softened, keeps the edge */
   }
 
   html,
   body {
-    background-color: #000000;
-    color: #fafafa;
+    background-color: #0c0a09; /* stone-950 — warm page bg */
+    color: #fafaf9; /* stone-50 */
     font-family: "Inter", sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
   * {
-    border-color: #27272a; /* border-zinc-800 as the universal 1px line */
+    border-color: #292524; /* stone-800 as the universal 1px line */
   }
 
   ::selection {
@@ -59,46 +59,60 @@
     height: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #000000;
+    background: #0c0a09;
   }
   ::-webkit-scrollbar-thumb {
-    background: #27272a;
+    background: #292524;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #3f3f46;
+    background: #44403c;
   }
 }
 
 @layer components {
   /* Razor-thin hairline divider, the app's primary structural device */
   .hairline {
-    border-bottom: 1px solid #27272a;
+    border-bottom: 1px solid #292524; /* stone-800 */
   }
 
-  /* The single accent surface — reserved for 🔥 and active states only */
+  /* Ogień accent surface — CTA / 🔥 / active states */
   .accent-surface {
     background-color: #ff450015;
     border: 1px solid #ff450055;
     color: #ff4500;
   }
 
+  /* Fiolet — community / status / presence (rule R1: ~20% max) */
+  .community-surface {
+    background-color: #8b5cf61f;
+    border: 1px solid #8b5cf666;
+    color: #a78bfa;
+  }
+
+  /* Róż — destructive only */
+  .danger-surface {
+    background-color: #e11d481f;
+    border: 1px solid #e11d4866;
+    color: #fb7185;
+  }
+
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-none border border-zinc-800
-      bg-zinc-950 px-4 py-2 text-sm font-medium text-zinc-50 transition-colors
-      hover:border-zinc-600 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-sm border border-stone-800
+      bg-stone-950 px-4 py-2 text-sm font-medium text-stone-50 transition-colors
+      hover:border-stone-600 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none;
   }
 
   .btn-ogien {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-none border px-3 py-1.5
+    @apply inline-flex items-center justify-center gap-1.5 rounded-sm border px-3 py-1.5
       text-sm font-semibold transition-all active:scale-95 disabled:pointer-events-none disabled:opacity-50;
   }
 
   .card {
-    @apply rounded-none border border-zinc-800 bg-zinc-950/40 p-4;
+    @apply rounded-sm border border-stone-800 bg-stone-900/40 p-4;
   }
 
   .tag {
-    @apply rounded-none border border-zinc-800 px-2 py-0.5 text-xs text-zinc-400;
+    @apply rounded-sm border border-stone-800 px-2 py-0.5 text-xs text-stone-400;
   }
 }
 

@@ -48,21 +48,38 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
 
-        // ---- app-specific tokens (unchanged) ----
+        // ---- app-specific tokens (BuildTogether palette — see DESIGN.md) ----
+        // Warm graphite (stone) base — replaces the old cold OLED black / zinc.
         base: {
-          black: "#000000",
-          zinc: "#09090b",
+          bg: "#0c0a09",       // page (stone-950)
+          card: "#1c1917",     // card (stone-900)
+          raised: "#292524",   // hover / popover / hairline (stone-800)
         },
         ink: {
-          DEFAULT: "#fafafa",
-          muted: "#a1a1aa",
-          dim: "#52525b",
+          DEFAULT: "#fafaf9",  // stone-50
+          muted: "#a8a29e",    // stone-400
+          dim: "#78716c",      // stone-500
         },
-        // Ogień accent — used EXCLUSIVELY for fire mechanic, badges, active state
+        // Ogień — the single warm accent: primary CTA + 🔥 mechanic + active + focus
         ogien: {
           DEFAULT: "#ff4500",
+          hover: "#ff5a1f",
           soft: "#ff450022",
           ring: "#ff450055",
+        },
+        // Fiolet — community / status / presence, held to ~20% (rule R1 in DESIGN.md)
+        fiolet: {
+          DEFAULT: "#a78bfa",
+          solid: "#7c3aed",
+          soft: "#8b5cf622",
+          ring: "#8b5cf655",
+        },
+        // Róż — destructive ONLY, split out from ogień so "Usuń" ≠ reward
+        danger: {
+          DEFAULT: "#fb7185",
+          solid: "#e11d48",
+          soft: "#e11d4822",
+          ring: "#e11d4855",
         },
       },
       fontFamily: {

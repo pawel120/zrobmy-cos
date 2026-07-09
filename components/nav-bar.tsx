@@ -81,7 +81,7 @@ export function NavBar() {
     pathname === href ? "text-ogien" : "text-zinc-500 hover:text-zinc-300";
 
   return (
-    <header className="hairline sticky top-0 z-40 bg-black/90 backdrop-blur">
+    <header className="hairline sticky top-0 z-40 bg-base-bg/90 backdrop-blur">
       <nav className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3 text-sm">
         <Link href="/" className="font-display font-semibold text-zinc-50">
           BuildTogether
