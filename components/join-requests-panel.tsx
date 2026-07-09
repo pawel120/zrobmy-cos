@@ -62,7 +62,12 @@ export function JoinRequestsPanel({ projectId }: JoinRequestsPanelProps) {
     });
 
     if (rpcError) {
-      setError("Nie udało się przetworzyć odpowiedzi.");
+      // Surface the real Postgres/PostgREST error instead of swallowing it —
+      // a "could not find function" here means the respond_to_join_request RPC
+      // wasn't created (partial schema.sql run); anything else is a runtime
+      // error raised inside the function.
+      console.error("respond_to_join_request failed:", rpcError);
+      setError(`Nie udało się przetworzyć odpowiedzi: ${rpcError.message}`);
       setRespondingId(null);
       return;
     }
