@@ -472,7 +472,9 @@ begin
   end if;
 
   update public.join_requests
-    set status = case when accept then 'accepted' else 'declined' end,
+    -- Cast is required: a CASE over two text literals resolves to `text`, and
+    -- there is no implicit text -> enum assignment cast for join_request_status.
+    set status = (case when accept then 'accepted' else 'declined' end)::join_request_status,
         resolved_at = now()
     where id = request_id;
 
