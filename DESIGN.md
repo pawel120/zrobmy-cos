@@ -1,11 +1,12 @@
 # BuildTogether — system kolorów i reguły
 
-Źródło prawdy dla rebrandingu wizualnego. Kierunek: **ciepłe ocieplenie bez utraty
-ostrego, inżynierskiego charakteru.** Ciemny motyw (light mode = później).
+Źródło prawdy dla rebrandingu wizualnego. Kierunek po repozycjonowaniu (2026-07):
+**ciepły, miękki premium** — apka dla ogólnego rynku twórców i inwestorów, nie
+studencko-hackathonowa. Ciemny motyw (light mode = później).
 
-Trzy funkcjonalne kolory, nie więcej: **ogień** (energia/akcja), **fiolet**
-(ludzie/społeczność), **róż** (destrukcja). Reszta to ciepłe neutralne (stone).
-Dyscyplina jest ważniejsza niż paleta — patrz sekcja „Reguły".
+Dwa funkcjonalne kolory, nie więcej: **ember** (energia/akcja/🔥) i **róż**
+(destrukcja). Fiolet USUNIĘTY (gryzł się z różem). Reszta to ciepłe neutralne
+(stone). Dyscyplina ważniejsza niż paleta — patrz „Reguły".
 
 ---
 
@@ -13,9 +14,9 @@ Dyscyplina jest ważniejsza niż paleta — patrz sekcja „Reguły".
 
 | | Wartość | Uwaga |
 |---|---|---|
-| Radius | `2px` | było `0` — ledwo zmiękczone, NIE 6px (6px = generyk) |
+| Radius | `8px` kontrolki / `12px` karty | miękka skóra po repozycjonowaniu |
 | Font body | Inter | bez zmian |
-| Font display/mono | JetBrains Mono | bez zmian |
+| Font display | Space Grotesk | mono (JetBrains) tylko do liczb |
 | Hairline | 1px | nadal główny element konstrukcyjny |
 | Motion | `fire-pop`, `toast-in` | bez zmian |
 
@@ -35,23 +36,13 @@ Dyscyplina jest ważniejsza niż paleta — patrz sekcja „Reguły".
 --text-dim     #78716c   /* stone-500 */
 ```
 
-### Ogień — JEDYNY ciepły akcent: CTA + mechanika 🔥 + stan aktywny + focus
+### Ember (klasa `ogien` w kodzie) — JEDYNY ciepły akcent: CTA + 🔥 + aktywny + focus
 ```
---ogien         #ff4500
---ogien-hover   #ff5a1f
---ogien-bg      rgba(255,69,0,.12)   /* tło tintowane */
---ogien-border  rgba(255,69,0,.45)
+--ogien         #f97316   /* zmiękczone z neonowego #ff4500 */
+--ogien-hover   #fb923c
+--ogien-bg      rgba(249,115,22,.12)
+--ogien-border  rgba(249,115,22,.45)
 ```
-
-### Fiolet — drugi kolor: społeczność, status, obecność, faza, liczby ludzi
-```
---fiolet         #a78bfa   /* tekst/ikona na ciemnym (violet-400, czytelny) */
---fiolet-solid   #7c3aed   /* wypełnienie chipa (tekst na nim: #ede9fe) */
---fiolet-bg      rgba(139,92,246,.14)
---fiolet-border  rgba(139,92,246,.42)
-```
-Uwaga: „głęboki" fiolet jest za ciemny na tekst — do tekstu ZAWSZE `#a78bfa`,
-`#7c3aed` tylko jako wypełnienie z jasnym tekstem na wierzchu.
 
 ### Róż — WYŁĄCZNIE destrukcja (usuwanie), rozdzielone od ognia
 ```
@@ -69,7 +60,7 @@ zielony  → tylko prawdziwy „sukces/zapisano", jeśli kiedyś zajdzie potrzeb
 ---
 
 ## 3. Tokeny shadcn (HSL — dla globals.css `:root`)
-Podmiana istniejących zmiennych. Radius z `0px` na `2px`.
+Podmiana istniejących zmiennych. Radius `8px` (kontrolki; karty rounded-lg 12px).
 ```
 --background       20 14% 4%     /* #0c0a09 */
 --foreground       48 8% 98%     /* #fafaf9 */
@@ -79,12 +70,12 @@ Podmiana istniejących zmiennych. Radius z `0px` na `2px`.
 --secondary        20 7% 15%     /* #292524 */
 --muted            20 7% 15%
 --muted-foreground 24 6% 64%     /* #a8a29e */
---accent           16 100% 50%   /* ogień #ff4500 */
+--accent           25 95% 53%    /* ember #f97316 */
 --destructive      347 77% 50%   /* róż #e11d48 — BYŁO ogień, to jest fix */
 --border           20 7% 15%     /* #292524 */
 --input            20 7% 15%
---ring             16 100% 50%   /* focus = ogień */
---radius           2px
+--ring             25 95% 53%    /* focus = ember */
+--radius           8px
 ```
 Dodatkowo w globals.css: `* { border-color }` z `#27272a` na `#292524`, tło
 `html,body` z `#000` na `#0c0a09`, `::selection` i `:focus-visible` zostają ogień.
@@ -93,15 +84,13 @@ Dodatkowo w globals.css: `* { border-color }` z `#27272a` na `#292524`, tło
 
 ## 4. Reguły (to jest właściwa robota — nie hexy)
 
-**R1. Proporcja 80/20.** Ogień dominuje (akcja/energia). Fiolet to najwyżej ~20%
-powierzchni koloru — statusy, badge fazy, obecność, liczniki ludzi. Nigdy dwa
-walczące akcenty w jednym komponencie.
+**R1. Jeden akcent.** Ember to jedyny kolor akcji. Statusy/fazy = neutralne pille
+(stone). Żadnego drugiego koloru dekoracyjnego.
 
 **R2. Znaczenia są sztywne.**
-- **Ogień** = akcja + energia: główne CTA, przycisk 🔥, stan aktywny/zaznaczony, focus ring.
-- **Fiolet** = ludzie: „X w ekipie", online/obecność, badge fazy projektu, tagi społecznościowe.
+- **Ember** = akcja + energia: główne CTA, przycisk 🔥, stan aktywny/zaznaczony, focus ring.
 - **Róż** = TYLKO destrukcja: „Usuń", „Odrzuć na zawsze". Nigdy dekoracyjnie.
-- Nigdy: ogień na „Usuń", fiolet na „Usuń", róż na cokolwiek nie-destrukcyjnego.
+- Nigdy: ember na „Usuń", róż na cokolwiek nie-destrukcyjnego.
 
 **R3. Jedno główne CTA na widok.** Tylko jeden pomarańczowy przycisk-akcja na
 ekran. Reszta = neutralny stone outline (`btn-primary`) albo ghost.
@@ -114,22 +103,22 @@ rezerwujemy dla TEJ jednej akcji albo mechaniki ognia. Powściągliwość = prem
 **R6. Tekst na kolorowym wypełnieniu** = najciemniejszy odcień tej samej rodziny
 (nie czarny, nie szary). Na dark większość koloru używamy jako outline/tint, nie fill.
 
-**R7. Rogi 2px na kontrolkach i kartach. Hairline 1px zostaje.** Bez wyjątków w górę
-(żadnych 6–12px), bo wraca generyk.
+**R7. Rogi: 8px kontrolki, 12px karty, tagi pille (rounded-full). Hairline 1px zostaje.**
 
-**R8. Kontrast.** Fiolet i róż do tekstu w wersji jasnej (`-400`), nie „deep".
+**R8. Kontrast.** Róż do tekstu w wersji jasnej (`-400`), nie „deep".
 Każdy kolor-tekst na `--bg`/`--card` ma przejść WCAG AA (≥4.5:1 dla drobnego).
 
 ---
 
-## 5. Mapa zmian w kodzie (do implementacji)
-- `tailwind.config.js` → dodać rodziny `fiolet` i `danger`; `ogien` zostaje; neutralne z zinc na stone.
-- `app/globals.css` → podmiana zmiennych z sekcji 3; `.accent-surface` zostaje (ogień);
-  dodać `.community-surface` (fiolet); rozdzielić destrukcję na osobne style róż.
-- Komponenty destrukcyjne (`admin-row-actions`, edycja projektu „Usuń", `report-row`,
-  join „Odrzuć") → z ognia na `--danger`.
-- Badge fazy projektu, „X w ekipie", obecność → `--fiolet`.
-- `--radius` 0 → 2px (jedno miejsce, propaguje wszędzie).
+## 5. Słownik (repozycjonowanie)
+- Fazy projektu (klucze DB legacy): luzna_rozkmina=„Pomysł", kodzimy_hackathon=„Budujemy",
+  walidujemy=„Walidujemy rynek", lecimy_po_hajs=„Szukamy finansowania", dziala=„Działa".
+  Istniejąca baza wymaga: `alter type project_phase add value if not exists 'walidujemy';`
+  oraz `... 'dziala';`
+- Hero: „Zbudujmy coś razem." Dwie ścieżki: „Mam pomysł" / „Chcę budować".
+- Zakaz slangu studenckiego; „Czym się zajmujesz" zamiast „Wydział"; fallback „Twórca".
+- Nav: Projekty · Ludzie · Wiadomości · Powiadomienia · Profil (+Admin);
+  Ustawienia na własnym profilu, Wyloguj w Ustawieniach.
 
-Kolejność wdrożenia: 1) tokeny (tailwind + globals), 2) rozdzielenie destrukcji na róż,
-3) wprowadzenie fioletu na statusy, 4) przegląd ekran po ekranie.
+Planowane (niewdrożone): oś „Szukamy" (ekipy/klientów/finansowania/feedbacku — nowa
+kolumna multi), Typ (Open Source/Komercyjny/Non-profit), flaga profilu „Szukam projektu".
