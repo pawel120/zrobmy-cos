@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 async function assertAdmin() {
   const supabase = createClient();
@@ -28,12 +29,32 @@ export async function setProfileShadowban(profileId: string, shadowbanned: boole
   revalidatePath("/admin");
 }
 
-// Intentionally no deleteProfile action: deleting the profiles row alone
-// orphans the auth.users account (it can still log in, but every FK into
-// profiles is broken and the trigger only fires on signup). Full account
-// deletion requires the service-role Admin API — until that exists, use
-// shadowban here and Supabase's dashboard (Authentication → Users) for
-// actual removal, which cascades to the profile correctly.
+// Full account deletion via the service-role Admin API: removes the
+// auth.users row, and the profiles FK cascade cleans everything downstream
+// (profile, projects, messages, fires...). No zombie accounts.
+export async function deleteAccount(profileId: string) {
+  await assertAdmin();
+  const admin = createAdminClient();
+  const { error } = await admin.auth.admin.deleteUser(profileId);
+  if (error) throw new Error(`Nie udało się usunąć konta: ${error.message}`);
+  revalidatePath("/admin");
+}
+
+export async function createNews(title: string, body: string) {
+  const supabase = await assertAdmin();
+  const { error } = await supabase.from("news").insert({ title: title.trim(), body: body.trim() });
+  if (error) throw new Error(`Nie udało się dodać aktualności: ${error.message}`);
+  revalidatePath("/admin");
+  revalidatePath("/");
+}
+
+export async function deleteNews(newsId: string) {
+  const supabase = await assertAdmin();
+  const { error } = await supabase.from("news").delete().eq("id", newsId);
+  if (error) throw new Error(`Nie udało się usunąć aktualności: ${error.message}`);
+  revalidatePath("/admin");
+  revalidatePath("/");
+}
 
 export async function setProjectShadowban(projectId: string, shadowbanned: boolean) {
   const supabase = await assertAdmin();

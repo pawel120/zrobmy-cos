@@ -3,8 +3,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ProfileLink } from "@/components/profile-link";
 import type { Profile } from "@/types/database";
+
+function shortTime(iso: string): string {
+  const d = new Date(iso);
+  const sameDay = new Date().toDateString() === d.toDateString();
+  return sameDay
+    ? d.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" })
+    : d.toLocaleDateString("pl-PL", { day: "numeric", month: "short" });
+}
 
 interface InboxRow {
   room_id: string;
@@ -102,7 +109,7 @@ export default function MessagesInboxPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-6 text-xl font-semibold text-stone-50">Wiadomości</h1>
+      <h1 className="mb-6 font-display text-xl font-semibold text-stone-50">Wiadomości</h1>
 
       {error && <p className="mb-4 text-xs text-danger">{error}</p>}
 
@@ -118,20 +125,35 @@ export default function MessagesInboxPage() {
             <li key={entry.room_id}>
               <button
                 onClick={() => router.push(`/messages/${entry.room_id}`)}
-                className="flex w-full items-center justify-between gap-3 py-3 text-left"
+                className="flex w-full items-center gap-3 py-3 text-left"
               >
-                <div className="min-w-0 flex-1">
-                  {entry.otherUser ? (
-                    <ProfileLink profile={entry.otherUser} />
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-stone-800 text-xs text-stone-300">
+                  {entry.otherUser?.avatar_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={entry.otherUser.avatar_url} alt="" className="h-full w-full object-cover" />
                   ) : (
-                    <span className="text-stone-600">Nieznany użytkownik</span>
+                    (entry.otherUser?.username ?? "??").slice(0, 2).toUpperCase()
                   )}
-                  <p className="mt-0.5 truncate pl-8 text-sm text-stone-500">
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span
+                      className={`truncate text-sm ${entry.unread_count > 0 ? "font-semibold text-stone-50" : "text-stone-200"}`}
+                    >
+                      {entry.otherUser
+                        ? entry.otherUser.display_name || entry.otherUser.username
+                        : "Nieznany użytkownik"}
+                    </span>
+                    <span className="shrink-0 text-xs text-stone-600">{shortTime(entry.last_message_at)}</span>
+                  </div>
+                  <p
+                    className={`mt-0.5 truncate text-sm ${entry.unread_count > 0 ? "text-stone-300" : "text-stone-500"}`}
+                  >
                     {entry.last_message_content ?? "Zacznijcie rozmowę…"}
                   </p>
                 </div>
                 {entry.unread_count > 0 && (
-                  <span className="flex h-5 min-w-5 shrink-0 items-center justify-center bg-ogien px-1.5 text-xs font-semibold text-black">
+                  <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-ogien px-1.5 text-xs font-semibold text-black">
                     {entry.unread_count > 9 ? "9+" : entry.unread_count}
                   </span>
                 )}

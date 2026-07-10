@@ -2,10 +2,20 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { Send } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { dbError } from "@/lib/utils";
 import { ProfileLink } from "@/components/profile-link";
 import type { Message, Profile } from "@/types/database";
+
+function dayLabel(iso: string): string {
+  const d = new Date(iso);
+  const today = new Date();
+  const yesterday = new Date(Date.now() - 86_400_000);
+  if (d.toDateString() === today.toDateString()) return "dzisiaj";
+  if (d.toDateString() === yesterday.toDateString()) return "wczoraj";
+  return d.toLocaleDateString("pl-PL", { day: "numeric", month: "long" });
+}
 
 interface ChatPageProps {
   params: { chatId: string };
@@ -186,19 +196,38 @@ export default function ChatPage({ params }: ChatPageProps) {
       </header>
 
       <div className="flex-1 space-y-2 overflow-y-auto py-4">
-        {messages.map((msg) => {
+        {messages.map((msg, i) => {
           const isMine = msg.sender_id === currentUserId;
+          const prev = messages[i - 1];
+          const newDay = !prev || new Date(prev.created_at).toDateString() !== new Date(msg.created_at).toDateString();
           return (
-            <div key={msg.id} className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
-              <div
-                className={
-                  isMine
-                    ? "max-w-[75%] border border-ogien/40 bg-ogien/10 px-3 py-2 text-sm text-stone-100"
-                    : "max-w-[75%] border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-200"
-                }
-                style={{ opacity: msg.pending ? 0.6 : 1 }}
-              >
-                {msg.content}
+            <div key={msg.id}>
+              {newDay && (
+                <p className="py-2 text-center text-[10px] uppercase tracking-wide text-stone-600">
+                  {dayLabel(msg.created_at)}
+                </p>
+              )}
+              <div className={`flex items-end gap-2 ${isMine ? "justify-end" : "justify-start"}`}>
+                {!isMine && (
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-stone-800 text-[9px] text-stone-300">
+                    {otherUser?.avatar_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={otherUser.avatar_url} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      (otherUser?.username ?? "??").slice(0, 2).toUpperCase()
+                    )}
+                  </span>
+                )}
+                <div
+                  className={
+                    isMine
+                      ? "max-w-[75%] rounded-2xl rounded-br-md bg-ogien/15 px-3.5 py-2 text-sm text-stone-100"
+                      : "max-w-[75%] rounded-2xl rounded-bl-md bg-stone-900 px-3.5 py-2 text-sm text-stone-200"
+                  }
+                  style={{ opacity: msg.pending ? 0.6 : 1 }}
+                >
+                  {msg.content}
+                </div>
               </div>
             </div>
           );
@@ -218,12 +247,17 @@ export default function ChatPage({ params }: ChatPageProps) {
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Napisz coś…"
-          className="flex-1 border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+          placeholder="Napisz wiadomość…"
+          className="flex-1 rounded-full border border-stone-800 bg-stone-950 px-4 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
           maxLength={4000}
         />
-        <button type="submit" disabled={!draft.trim() || isSending} className="btn-primary">
-          Wyślij
+        <button
+          type="submit"
+          disabled={!draft.trim() || isSending}
+          aria-label="Wyślij"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-stone-50 text-stone-950 transition-colors hover:bg-stone-200 disabled:opacity-40"
+        >
+          <Send className="h-4 w-4" aria-hidden />
         </button>
       </form>
     </main>

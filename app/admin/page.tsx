@@ -3,13 +3,14 @@ import { createClient } from "@/lib/supabase/server";
 import { ProfileRow } from "./profile-row";
 import { ProjectRow } from "./project-row";
 import { ReportRowActions } from "./report-row";
+import { NewsAdmin } from "./news-admin";
 import type { Profile, Project, Report } from "@/types/database";
 
 interface AdminPageProps {
   searchParams: { tab?: string; q?: string };
 }
 
-type Tab = "profiles" | "projects" | "reports";
+type Tab = "profiles" | "projects" | "reports" | "news";
 
 interface ReportWithContext extends Report {
   reporter: Profile | null;
@@ -38,15 +39,25 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   if (!callerProfile?.is_admin) redirect("/");
 
   const tab: Tab =
-    searchParams.tab === "projects" ? "projects" : searchParams.tab === "reports" ? "reports" : "profiles";
+    searchParams.tab === "projects"
+      ? "projects"
+      : searchParams.tab === "reports"
+        ? "reports"
+        : searchParams.tab === "news"
+          ? "news"
+          : "profiles";
   const q = searchParams.q?.trim() ?? "";
 
   let profiles: Profile[] = [];
   let projects: (Project & { owner?: Profile | null })[] = [];
   let reports: ReportWithContext[] = [];
+  let newsItems: { id: string; title: string; body: string; created_at: string }[] = [];
   let openReportCount = 0;
 
-  if (tab === "profiles") {
+  if (tab === "news") {
+    const { data } = await supabase.from("news").select("*").order("created_at", { ascending: false }).limit(50);
+    newsItems = data ?? [];
+  } else if (tab === "profiles") {
     let query = supabase.from("profiles").select("*").order("created_at", { ascending: false }).limit(100);
     if (q) query = query.or(`username.ilike.%${q}%,display_name.ilike.%${q}%`);
     const { data } = await query;
@@ -104,13 +115,19 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           >
             Zgłoszenia
             {openReportCount > 0 && (
-              <span className="ml-1.5 bg-ogien px-1.5 py-0.5 text-[10px] font-semibold text-black">
+              <span className="ml-1.5 rounded-full bg-ogien px-1.5 py-0.5 text-[10px] font-semibold text-black">
                 {openReportCount}
               </span>
             )}
           </a>
+          <a
+            href="/admin?tab=news"
+            className={tab === "news" ? "text-ogien" : "text-stone-500 hover:text-stone-300"}
+          >
+            Aktualności
+          </a>
         </div>
-        {tab !== "reports" && (
+        {tab !== "reports" && tab !== "news" && (
           <form action={`/admin`} method="get" className="flex items-center gap-2">
             <input type="hidden" name="tab" value={tab} />
             <input
@@ -217,6 +234,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           </tbody>
         </table>
       )}
+
+      {tab === "news" && <NewsAdmin items={newsItems} />}
 
       {tab === "reports" && (
         <div className="flex flex-col gap-3">
