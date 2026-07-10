@@ -1,145 +1,110 @@
 import Link from "next/link";
+import { ArrowRight, Lightbulb, Hammer, Megaphone } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { ProjectCard } from "@/components/project-card";
 import type { Project } from "@/types/database";
 
-interface HomePageProps {
-  searchParams: { sort?: string };
-}
-
-export default async function HomePage({ searchParams }: HomePageProps) {
+// Landing-wizytówka: always rendered on "/", logged-in or not. The logo links
+// here; the app itself lives under /projekty.
+export default async function LandingPage() {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const sort = searchParams.sort === "najnowsze" ? "najnowsze" : "najgorętsze";
 
-  let projects: Project[] = [];
-
-  if (sort === "najgorętsze") {
-    const { data } = await supabase.rpc("get_hot_projects", { days_back: 7, limit_count: 30 });
-    projects = (data ?? []) as Project[];
-  } else {
-    const { data } = await supabase
-      .from("projects")
+  const [{ data: hotData }, { data: newsData }] = await Promise.all([
+    supabase.rpc("get_hot_projects", { days_back: 30, limit_count: 3 }),
+    supabase
+      .from("news")
       .select("*")
-      .eq("is_shadowbanned", false)
+      .eq("published", true)
       .order("created_at", { ascending: false })
-      .limit(30);
-    projects = (data ?? []) as Project[];
-  }
+      .limit(3),
+  ]);
 
-  // ---- Landing for logged-out visitors -----------------------------------
-  // Same route, conditional render — no redirects, and the hot-projects
-  // preview reuses the query above (RLS: projects are publicly readable).
-  if (!user) {
-    return (
-      <main className="mx-auto max-w-2xl px-4 py-14">
-        <section className="pb-10 text-center">
-          <h1 className="font-display text-3xl font-bold tracking-tight text-stone-50 sm:text-4xl">
-            Zbudujmy <span className="text-ogien">coś</span> razem.
-          </h1>
-          <p className="mx-auto mt-3 max-w-md text-sm text-stone-400">
-            Pomysły spotykają ludzi. Ludzie spotykają projekty.
-          </p>
-          <div className="mt-6 flex justify-center gap-3">
-            <Link href="/signup" className="accent-surface rounded-sm px-5 py-2 text-sm font-medium hover:bg-ogien/20">
+  const hot = (hotData ?? []) as Project[];
+  const news = newsData ?? [];
+
+  return (
+    <main className="mx-auto max-w-2xl px-4 py-14">
+      {/* ---- Hero ----------------------------------------------------------- */}
+      <section className="pb-12 text-center">
+        <h1 className="font-display text-3xl font-bold tracking-tight text-stone-50 sm:text-4xl">
+          Dla tych, którzy wolą <span className="text-ogien">tworzyć</span> niż planować.
+        </h1>
+        <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-stone-400">
+          BuildTogether łączy ludzi z pomysłami, twórców szukających projektów i inwestorów
+          szukających okazji. Wrzucasz pomysł, zbierasz zespół, budujecie.
+        </p>
+        <div className="mt-7 flex justify-center gap-3">
+          <Link href="/projekty" className="btn-primary">
+            Przejdź do projektów
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </Link>
+          {!user && (
+            <Link href="/signup" className="btn-ghost">
               Załóż konto
             </Link>
-            <Link href="/login" className="btn-primary">
-              Zaloguj się
+          )}
+        </div>
+      </section>
+
+      {/* ---- O inicjatywie --------------------------------------------------- */}
+      <section className="hairline grid gap-3 pb-12 sm:grid-cols-3">
+        <div className="card">
+          <Lightbulb className="h-5 w-5 text-ogien" aria-hidden />
+          <h2 className="mt-2 font-display text-sm font-semibold text-stone-50">Masz pomysł</h2>
+          <p className="mt-1 text-sm text-stone-400">Opisz projekt w 2 minuty i pokaż go światu.</p>
+        </div>
+        <div className="card">
+          <Hammer className="h-5 w-5 text-ogien" aria-hidden />
+          <h2 className="mt-2 font-display text-sm font-semibold text-stone-50">Chcesz budować</h2>
+          <p className="mt-1 text-sm text-stone-400">Znajdź projekt, w którym Twoje umiejętności zagrają.</p>
+        </div>
+        <div className="card">
+          <Megaphone className="h-5 w-5 text-ogien" aria-hidden />
+          <h2 className="mt-2 font-display text-sm font-semibold text-stone-50">Szukasz okazji</h2>
+          <p className="mt-1 text-sm text-stone-400">Przeglądaj projekty, które szukają finansowania.</p>
+        </div>
+      </section>
+
+      {/* ---- Aktualności ------------------------------------------------------ */}
+      {news.length > 0 && (
+        <section className="py-10">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-stone-500">
+            Aktualności
+          </h2>
+          <div className="flex flex-col gap-3">
+            {news.map((n) => (
+              <article key={n.id} className="card">
+                <h3 className="font-display text-sm font-semibold text-stone-50">{n.title}</h3>
+                {n.body && <p className="mt-1 text-sm leading-relaxed text-stone-400">{n.body}</p>}
+                <p className="mt-2 text-xs text-stone-600">
+                  {new Date(n.created_at).toLocaleDateString("pl-PL")}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ---- Podgląd projektów ----------------------------------------------- */}
+      {hot.length > 0 && (
+        <section className="py-10">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-500">
+              Popularne teraz
+            </h2>
+            <Link href="/projekty" className="text-xs text-stone-500 hover:text-ogien">
+              Wszystkie →
             </Link>
           </div>
-        </section>
-
-        <section className="grid gap-3 pb-10 sm:grid-cols-2">
-          <div className="card">
-            <h2 className="font-display text-base font-medium text-stone-50">Mam pomysł</h2>
-            <p className="mt-1 text-sm text-stone-400">
-              Wrzuć projekt, pokaż o co gra i zbierz ekipę, która go zbuduje.
-            </p>
-          </div>
-          <div className="card">
-            <h2 className="font-display text-base font-medium text-stone-50">Chcę budować</h2>
-            <p className="mt-1 text-sm text-stone-400">
-              Opisz, co potrafisz, i znajdź projekt, w którym to zagra.
-            </p>
+          <div className="flex flex-col gap-3">
+            {hot.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
           </div>
         </section>
-
-        <section className="hairline grid gap-4 pb-10 sm:grid-cols-3">
-          <div>
-            <p className="font-mono text-xs text-ogien">01 / wrzuć</p>
-            <p className="mt-1 text-sm text-stone-400">Opisz projekt w 2 minuty.</p>
-          </div>
-          <div>
-            <p className="font-mono text-xs text-ogien">02 / zbierz</p>
-            <p className="mt-1 text-sm text-stone-400">Ludzie klikają „Chcę dołączyć&rdquo;.</p>
-          </div>
-          <div>
-            <p className="font-mono text-xs text-ogien">03 / budujcie</p>
-            <p className="mt-1 text-sm text-stone-400">Czat w apce i lecicie.</p>
-          </div>
-        </section>
-
-        {projects.length > 0 && (
-          <section className="py-8">
-            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-stone-500">
-              Najgorętsze teraz
-            </h2>
-            <div className="flex flex-col gap-3">
-              {projects.slice(0, 3).map((project) => (
-                <ProjectCard key={project.id} project={project} />
-              ))}
-            </div>
-          </section>
-        )}
-      </main>
-    );
-  }
-
-  // ---- Feed for logged-in users -------------------------------------------
-  return (
-    <main className="mx-auto max-w-2xl px-4 py-10">
-      <div className="hairline mb-6 flex items-center justify-between pb-4">
-        <div>
-          <h1 className="font-display text-xl font-semibold text-stone-50">Projekty</h1>
-          <p className="text-sm text-stone-500">Znajdź projekt albo znajdź ekipę.</p>
-        </div>
-        <Link href="/project/new" className="accent-surface rounded-sm px-4 py-2 text-sm font-medium hover:bg-ogien/20">
-          Wrzuć projekt
-        </Link>
-      </div>
-
-      <div className="mb-5 flex gap-4 text-sm">
-        <Link
-          href="/?sort=najgorętsze"
-          className={sort === "najgorętsze" ? "text-ogien" : "text-stone-500 hover:text-stone-300"}
-        >
-          🔥 Najgorętsze
-        </Link>
-        <Link
-          href="/?sort=najnowsze"
-          className={sort === "najnowsze" ? "text-ogien" : "text-stone-500 hover:text-stone-300"}
-        >
-          Najnowsze
-        </Link>
-      </div>
-
-      {projects.length === 0 ? (
-        <div className="card text-center text-sm text-stone-500">
-          Cicho tu. Bądź pierwszy —{" "}
-          <Link href="/project/new" className="text-ogien underline">
-            wrzuć projekt
-          </Link>
-          .
-        </div>
-      ) : (
-        <div className="flex flex-col gap-3">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
       )}
     </main>
   );

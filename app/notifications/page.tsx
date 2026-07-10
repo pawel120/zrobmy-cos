@@ -2,14 +2,15 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { Flame, Handshake, MessageCircle, Megaphone, type LucideIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Notification } from "@/types/database";
 
-const TYPE_ICON: Record<string, string> = {
-  fire_received: "🔥",
-  join_request: "🤝",
-  new_message: "💬",
-  system: "📣",
+const TYPE_ICON: Record<string, LucideIcon> = {
+  fire_received: Flame,
+  join_request: Handshake,
+  new_message: MessageCircle,
+  system: Megaphone,
 };
 
 function notificationHref(n: Notification): string {
@@ -86,8 +87,11 @@ export default function NotificationsPage() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
       {toast && (
-        <div className="animate-toast-in fixed left-1/2 top-4 z-50 flex -translate-x-1/2 items-center gap-2 border border-ogien/50 bg-base-bg px-4 py-2 text-sm text-stone-100 shadow-lg">
-          <span aria-hidden>{TYPE_ICON[toast.type]}</span>
+        <div className="animate-toast-in fixed left-1/2 top-4 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-ogien/50 bg-base-bg px-4 py-2 text-sm text-stone-100 shadow-lg">
+          {(() => {
+            const Icon = TYPE_ICON[toast.type] ?? Megaphone;
+            return <Icon className="h-4 w-4 text-ogien" aria-hidden />;
+          })()}
           <span>{toast.message}</span>
         </div>
       )}
@@ -111,9 +115,10 @@ export default function NotificationsPage() {
                 href={notificationHref(n)}
                 className={`flex items-start gap-3 py-3 ${n.is_read ? "opacity-60" : ""}`}
               >
-                <span className="text-lg" aria-hidden>
-                  {TYPE_ICON[n.type]}
-                </span>
+                {(() => {
+                  const Icon = TYPE_ICON[n.type] ?? Megaphone;
+                  return <Icon className="mt-0.5 h-4 w-4 shrink-0 text-stone-400" aria-hidden />;
+                })()}
                 <div className="flex-1">
                   <p className="text-sm text-stone-200">{n.message}</p>
                   <p className="mt-0.5 text-xs text-stone-600">

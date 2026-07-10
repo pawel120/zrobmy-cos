@@ -172,7 +172,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <tr className="hairline text-xs uppercase tracking-wide text-stone-600">
               <th className="pb-2 font-normal">Projekt</th>
               <th className="pb-2 font-normal">Autor</th>
-              <th className="pb-2 font-normal">🔥</th>
+              <th className="pb-2 font-normal">Ognie</th>
               <th className="pb-2 font-normal">Status</th>
               <th className="pb-2 font-normal">Akcje</th>
             </tr>

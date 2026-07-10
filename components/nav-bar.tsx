@@ -91,7 +91,7 @@ export function NavBar() {
         <div className="flex items-center gap-4">
           {userId === undefined ? null : userId ? (
             <>
-              <Link href="/" className={linkClass("/")}>
+              <Link href="/projekty" className={linkClass("/projekty")}>
                 Projekty
               </Link>
               <Link href="/students" className={linkClass("/students")}>
@@ -119,6 +119,9 @@ export function NavBar() {
             </>
           ) : (
             <>
+              <Link href="/projekty" className={linkClass("/projekty")}>
+                Projekty
+              </Link>
               <Link href="/login" className={linkClass("/login")}>
                 Zaloguj się
               </Link>

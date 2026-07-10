@@ -9,38 +9,38 @@
     /* shadcn/ui tokens — mapped onto the same OLED black / neon-orange
        palette as the rest of the app, NOT shadcn's default theme. Radius is
        0 everywhere: this app has no rounded corners by design. */
-    --background: 20 14% 4%;           /* #0c0a09 stone-950 — warm, replaces #000 */
-    --foreground: 48 8% 98%;           /* #fafaf9 stone-50 */
-    --card: 24 10% 10%;                /* #1c1917 stone-900 */
-    --card-foreground: 48 8% 98%;
-    --popover: 20 7% 15%;              /* #292524 stone-800 */
-    --popover-foreground: 48 8% 98%;
-    --primary: 48 8% 98%;              /* neutral — orange is the accent, not primary */
-    --primary-foreground: 24 10% 10%;
-    --secondary: 20 7% 15%;            /* stone-800 */
-    --secondary-foreground: 48 8% 98%;
-    --muted: 20 7% 15%;
-    --muted-foreground: 24 6% 64%;     /* #a8a29e stone-400 */
+    --background: 240 6% 4%;           /* #0a0a0c B3 stage */
+    --foreground: 240 7% 96%;          /* #f5f5f7 */
+    --card: 240 9% 10%;                /* #16161b */
+    --card-foreground: 240 7% 96%;
+    --popover: 240 7% 16%;             /* #26262c */
+    --popover-foreground: 240 7% 96%;
+    --primary: 240 7% 96%;             /* white-pill primary CTA (B3) */
+    --primary-foreground: 240 6% 5%;
+    --secondary: 240 7% 16%;
+    --secondary-foreground: 240 7% 96%;
+    --muted: 240 7% 16%;
+    --muted-foreground: 240 4% 56%;    /* #8a8a94 */
     --accent: 25 95% 53%;              /* ember #f97316 — CTA + 🔥 + active */
     --accent-foreground: 0 0% 0%;
     --destructive: 347 77% 50%;        /* róż #e11d48 — split from ogień (UX fix) */
     --destructive-foreground: 0 0% 100%;
-    --border: 20 7% 15%;               /* #292524 stone-800 hairline, universal 1px line */
-    --input: 20 7% 15%;
+    --border: 240 7% 16%;              /* #26262c hairline, universal 1px line */
+    --input: 240 7% 16%;
     --ring: 25 95% 53%;                /* focus ring stays ember */
-    --radius: 8px;                     /* soft skin: 8px controls, 12px cards (rounded-lg) */
+    --radius: 10px;                    /* B3: 10px controls, 14px cards (rounded-lg) */
   }
 
   html,
   body {
-    background-color: #0c0a09; /* stone-950 — warm page bg */
-    color: #fafaf9; /* stone-50 */
+    background-color: #0a0a0c; /* B3 stage */
+    color: #f5f5f7;
     font-family: "Inter", sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
   * {
-    border-color: #292524; /* stone-800 as the universal 1px line */
+    border-color: #26262c; /* universal 1px line */
   }
 
   ::selection {
@@ -59,20 +59,20 @@
     height: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #0c0a09;
+    background: #0a0a0c;
   }
   ::-webkit-scrollbar-thumb {
-    background: #292524;
+    background: #26262c;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #44403c;
+    background: #3a3a42;
   }
 }
 
 @layer components {
   /* Razor-thin hairline divider, the app's primary structural device */
   .hairline {
-    border-bottom: 1px solid #292524; /* stone-800 */
+    border-bottom: 1px solid #26262c;
   }
 
   /* Ogień (ember) accent surface — CTA / 🔥 / active states */
@@ -89,10 +89,18 @@
     color: #fb7185;
   }
 
+  /* B3 primary: solid white pill — the "hot" action button */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-sm border border-stone-800
-      bg-stone-950 px-4 py-2 text-sm font-medium text-stone-50 transition-colors
-      hover:border-stone-600 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+      bg-stone-50 px-4 py-2 text-sm font-medium text-stone-950 transition-colors
+      hover:bg-stone-200 active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none;
+  }
+
+  /* Quiet outline pill for secondary actions */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-stone-700
+      px-4 py-2 text-sm text-stone-200 transition-colors hover:border-stone-500
+      active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none;
   }
 
   .btn-ogien {

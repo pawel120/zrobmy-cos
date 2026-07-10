@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { Flame } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { NapiszButton } from "@/components/napisz-button";
 import { ProjectCard } from "@/components/project-card";
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: UserPageProps): Promise<Metad
   }
 
   const name = profile.display_name || profile.username;
-  const description = profile.bio || `${profile.faculty ?? "Twórca"} · 🔥 ${profile.hype_score} hype'u`;
+  const description = profile.bio || `${profile.faculty ?? "Twórca"} · ${profile.hype_score} docenień`;
 
   return {
     title: `${name} (@${profile.username}) — BuildTogether`,
@@ -91,8 +92,8 @@ export default async function UserProfilePage({ params }: UserPageProps) {
         </div>
 
         <div className="flex flex-col items-end gap-3">
-          <div className="accent-surface flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold">
-            <span aria-hidden>🔥</span>
+          <div className="accent-surface flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold">
+            <Flame className="h-4 w-4" aria-hidden />
             <span>{typedProfile.hype_score}</span>
           </div>
           <NapiszButton targetUserId={typedProfile.id} currentUserId={authUser?.id ?? null} />

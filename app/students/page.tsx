@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import { Flame } from "lucide-react";
 import { ProfileLink } from "@/components/profile-link";
 import type { Profile } from "@/types/database";
 import type { ProfilesResponse } from "@/app/api/profiles/route";
@@ -59,8 +60,8 @@ export default function StudentsPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-1 text-xl font-semibold text-stone-50">Ludzie</h1>
-      <p className="mb-6 text-sm text-stone-500">Szukaj po umiejętnościach, znajdź ekipę.</p>
+      <h1 className="mb-1 font-display text-xl font-semibold text-stone-50">Ludzie</h1>
+      <p className="mb-6 text-sm text-stone-500">Twórcy gotowi do współpracy — szukaj po umiejętnościach.</p>
 
       <div className="hairline mb-4 flex flex-wrap items-center gap-2 pb-4">
         <input
@@ -80,8 +81,8 @@ export default function StudentsPage() {
           onChange={(e) => setSort(e.target.value as "hype" | "recent")}
           className="border border-stone-800 bg-stone-950 px-2 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
         >
-          <option value="hype">Najwięcej hype&apos;u</option>
-          <option value="recent">Najnowsi</option>
+          <option value="hype">Najaktywniejsi</option>
+          <option value="recent">Nowi</option>
         </select>
       </div>
 
@@ -99,7 +100,9 @@ export default function StudentsPage() {
                 <ProfileLink profile={p} />
                 {p.faculty && <p className="mt-0.5 pl-8 text-xs text-stone-600">{p.faculty}</p>}
               </div>
-              <span className="flex items-center gap-1 text-xs text-ogien">🔥 {p.hype_score}</span>
+              <span className="flex items-center gap-1 text-xs text-ogien">
+                <Flame className="h-3.5 w-3.5" aria-hidden /> {p.hype_score}
+              </span>
             </li>
           ))}
         </ul>

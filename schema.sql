@@ -59,6 +59,9 @@ create index idx_profiles_skills_want on public.profiles using gin (skills_want)
 -- ----------------------------------------------------------------------------
 -- projects
 -- ----------------------------------------------------------------------------
+-- Existing databases: run
+--   alter table public.projects add column if not exists cover_url text;
+--   alter table public.projects add column if not exists video_url text;
 create table public.projects (
   id              uuid primary key default gen_random_uuid(),
   owner_id        uuid not null references public.profiles(id) on delete cascade,
@@ -67,6 +70,8 @@ create table public.projects (
   phase           project_phase not null default 'luzna_rozkmina',
   roles_needed    text[] not null default '{}',
   tags            text[] not null default '{}',
+  cover_url       text,                          -- Storage `covers` bucket; null = generated gradient
+  video_url       text,                          -- YouTube/Vimeo link, embedded on the project page
   fire_count      integer not null default 0,   -- denormalized total fires
   is_shadowbanned boolean not null default false,
   created_at      timestamptz not null default now(),
@@ -927,6 +932,55 @@ create policy "avatar_owner_update"
 create policy "avatar_owner_delete"
   on storage.objects for delete
   using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- ============================================================================
+-- Storage: covers bucket — project cover images, public read, writes locked
+-- to a {uid}/... path exactly like avatars.
+-- ============================================================================
+insert into storage.buckets (id, name, public)
+values ('covers', 'covers', true)
+on conflict (id) do nothing;
+
+create policy "cover_public_read"
+  on storage.objects for select
+  using (bucket_id = 'covers');
+
+create policy "cover_owner_write"
+  on storage.objects for insert
+  with check (bucket_id = 'covers' and (storage.foldername(name))[1] = auth.uid()::text);
+
+create policy "cover_owner_update"
+  on storage.objects for update
+  using (bucket_id = 'covers' and (storage.foldername(name))[1] = auth.uid()::text);
+
+create policy "cover_owner_delete"
+  on storage.objects for delete
+  using (bucket_id = 'covers' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- ============================================================================
+-- news — landing-page announcements, editable from the admin panel.
+-- Public read of published rows; writes admin-only (RLS below).
+-- ============================================================================
+create table if not exists public.news (
+  id          uuid primary key default gen_random_uuid(),
+  title       text not null check (char_length(title) between 3 and 120),
+  body        text not null default '',
+  published   boolean not null default true,
+  created_at  timestamptz not null default now()
+);
+
+alter table public.news enable row level security;
+
+drop policy if exists "news_select_published" on public.news;
+create policy "news_select_published"
+  on public.news for select
+  using (published = true or public.is_admin());
+
+drop policy if exists "news_admin_all" on public.news;
+create policy "news_admin_all"
+  on public.news for all
+  using (public.is_admin())
+  with check (public.is_admin());
 
 -- ============================================================================
 -- Realtime: expose tables needed for live UI updates

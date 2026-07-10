@@ -30,7 +30,7 @@ setInterval(() => {
   }
 }, RATE_LIMIT_WINDOW_MS * 5).unref?.();
 
-const PUBLIC_PATHS = ["/", "/login", "/signup", "/auth/callback", "/forgot-password", "/reset-password"];
+const PUBLIC_PATHS = ["/", "/projekty", "/login", "/signup", "/auth/callback", "/forgot-password", "/reset-password"];
 const PUBLIC_PREFIXES = ["/project/", "/user/", "/_next", "/favicon", "/api/auth"];
 
 function isPublicPath(pathname: string): boolean {

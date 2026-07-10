@@ -34,6 +34,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
+              "frame-src https://www.youtube-nocookie.com https://player.vimeo.com",
               "frame-ancestors 'none'",
             ].join("; "),
           },

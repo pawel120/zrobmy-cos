@@ -155,7 +155,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
       return;
     }
 
-    router.push(isAdminEdit ? "/admin?tab=projects" : "/");
+    router.push(isAdminEdit ? "/admin?tab=projects" : "/projekty");
     router.refresh();
   }
 

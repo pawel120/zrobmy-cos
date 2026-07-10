@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Flame } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { dbError } from "@/lib/utils";
 
@@ -56,7 +57,7 @@ export function FireButton({
         console.error("fires insert failed:", insertError);
         setHasFired(false);
         setFireCount((c) => Math.max(c - 1, 0));
-        setError(dbError("Nie udało się dać 🔥", insertError));
+        setError(dbError("Nie udało się docenić projektu", insertError));
       }
       setIsLocked(false);
     });
@@ -74,7 +75,7 @@ export function FireButton({
             : "btn-ogien border-stone-800 text-stone-400 hover:border-ogien hover:text-ogien"
         }
       >
-        <span aria-hidden>🔥</span>
+        <Flame className="h-4 w-4" aria-hidden />
         <span>{fireCount}</span>
       </button>
       {error && <p className="text-xs text-danger">{error}</p>}

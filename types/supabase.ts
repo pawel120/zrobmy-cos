@@ -201,6 +201,30 @@ export type Database = {
           },
         ]
       }
+      news: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          published: boolean
+          title: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          title: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          title?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           actor_id: string | null
@@ -316,6 +340,7 @@ export type Database = {
       }
       projects: {
         Row: {
+          cover_url: string | null
           created_at: string
           description: string
           fire_count: number
@@ -327,8 +352,10 @@ export type Database = {
           tags: string[]
           title: string
           updated_at: string
+          video_url: string | null
         }
         Insert: {
+          cover_url?: string | null
           created_at?: string
           description?: string
           fire_count?: number
@@ -340,8 +367,10 @@ export type Database = {
           tags?: string[]
           title: string
           updated_at?: string
+          video_url?: string | null
         }
         Update: {
+          cover_url?: string | null
           created_at?: string
           description?: string
           fire_count?: number
@@ -353,6 +382,7 @@ export type Database = {
           tags?: string[]
           title?: string
           updated_at?: string
+          video_url?: string | null
         }
         Relationships: [
           {

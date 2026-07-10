@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { coverBackground } from "@/components/project-card";
 import { FireButton } from "@/components/fire-button";
 import { ProfileLink } from "@/components/profile-link";
 import { JoinRequestButton } from "@/components/join-request-button";
@@ -19,6 +20,25 @@ const PHASE_LABELS: Record<string, string> = {
 
 interface ProjectPageProps {
   params: { id: string };
+}
+
+// Turns a YouTube/Vimeo watch link into an embeddable iframe URL; anything
+// else returns null and the raw link is shown instead of an embed.
+function embedUrl(raw: string): string | null {
+  try {
+    const u = new URL(raw);
+    if (u.hostname.includes("youtube.com") && u.searchParams.get("v")) {
+      return `https://www.youtube-nocookie.com/embed/${u.searchParams.get("v")}`;
+    }
+    if (u.hostname === "youtu.be" && u.pathname.length > 1) {
+      return `https://www.youtube-nocookie.com/embed/${u.pathname.slice(1)}`;
+    }
+    if (u.hostname.includes("vimeo.com")) {
+      const id = u.pathname.split("/").filter(Boolean)[0];
+      if (id && /^\d+$/.test(id)) return `https://player.vimeo.com/video/${id}`;
+    }
+  } catch {}
+  return null;
 }
 
 // Projects get shared into group chats and hackathon Discords far more than
@@ -105,6 +125,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
+      <div className="mb-6 h-32 rounded-lg" style={coverBackground(typedProject)} />
       <section className="hairline pb-6">
         <div className="flex items-center justify-between">
           <span className="tag">{PHASE_LABELS[typedProject.phase]}</span>
@@ -128,6 +149,31 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           {typedProject.description}
         </p>
       </section>
+
+      {typedProject.video_url && (
+        <section className="hairline py-6">
+          {embedUrl(typedProject.video_url) ? (
+            <div className="overflow-hidden rounded-lg border border-stone-800">
+              <iframe
+                src={embedUrl(typedProject.video_url)!}
+                className="aspect-video w-full"
+                allow="accelerometer; encrypted-media; picture-in-picture"
+                allowFullScreen
+                title={`Wideo projektu ${typedProject.title}`}
+              />
+            </div>
+          ) : (
+            <a
+              href={typedProject.video_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-ogien underline"
+            >
+              Zobacz wideo projektu
+            </a>
+          )}
+        </section>
+      )}
 
       {typedProject.roles_needed.length > 0 && (
         <section className="hairline py-6">

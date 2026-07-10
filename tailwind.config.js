@@ -48,17 +48,32 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
 
-        // ---- app-specific tokens (BuildTogether palette — see DESIGN.md) ----
-        // Warm graphite (stone) base — replaces the old cold OLED black / zinc.
+        // ---- app-specific tokens (BuildTogether B3 palette — see DESIGN.md) ----
+        // B3 "okładki": neutral graphite stage, covers bring the colour.
+        // The whole app styles with stone-* classes, so the stone scale is
+        // overridden here to retune every screen from one place.
+        stone: {
+          50: "#f5f5f7",
+          100: "#e8e8ec",
+          200: "#c9c9d1",
+          300: "#a9a9b4",
+          400: "#8a8a94",
+          500: "#6c6c76",
+          600: "#55555e",
+          700: "#3a3a42",
+          800: "#26262c",
+          900: "#16161b",
+          950: "#0e0e11",
+        },
         base: {
-          bg: "#0c0a09",       // page (stone-950)
-          card: "#1c1917",     // card (stone-900)
-          raised: "#292524",   // hover / popover / hairline (stone-800)
+          bg: "#0a0a0c",       // page
+          card: "#16161b",     // card
+          raised: "#26262c",   // hover / popover / hairline
         },
         ink: {
-          DEFAULT: "#fafaf9",  // stone-50
-          muted: "#a8a29e",    // stone-400
-          dim: "#78716c",      // stone-500
+          DEFAULT: "#f5f5f7",
+          muted: "#8a8a94",
+          dim: "#6c6c76",
         },
         // Ogień (ember) — the single warm accent: primary CTA + 🔥 mechanic + active + focus.
         // Softened from neon #ff4500 to ember #f97316 to match the rounded, warmer skin.
@@ -84,9 +99,9 @@ module.exports = {
         mono: ["var(--font-jetbrains-mono)", "monospace"],
       },
       borderRadius: {
-        // Soft skin: 8px controls (--radius), 10px mid, 12px cards.
-        lg: "12px",
-        md: "10px",
+        // B3 skin: 10px controls (--radius), 14px cards, pills for actions.
+        lg: "14px",
+        md: "12px",
         sm: "var(--radius)",
         none: "0px",
         DEFAULT: "var(--radius)",

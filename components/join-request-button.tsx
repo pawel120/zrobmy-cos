@@ -54,7 +54,7 @@ export function JoinRequestButton({ projectId, currentUserId, alreadyRequested }
   if (!isOpen) {
     return (
       <button onClick={() => setIsOpen(true)} className="btn-primary">
-        Chcę dołączyć
+        Dołącz do zespołu
       </button>
     );
   }

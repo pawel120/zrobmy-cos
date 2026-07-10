@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { dbError } from "@/lib/utils";
 import type { ProjectPhase } from "@/types/database";
 
 const PHASE_OPTIONS: { value: ProjectPhase; label: string }[] = [
@@ -30,6 +31,8 @@ export default function NewProjectPage() {
   const [phase, setPhase] = useState<ProjectPhase>("luzna_rozkmina");
   const [rolesNeeded, setRolesNeeded] = useState("");
   const [tags, setTags] = useState("");
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [videoUrl, setVideoUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,6 +65,24 @@ export default function NewProjectPage() {
     setIsSubmitting(true);
     setError(null);
 
+    // Upload the cover first (path is locked to the uploader's uid by the
+    // storage RLS policies) so its URL can go into the insert directly.
+    let coverUrl: string | null = null;
+    if (coverFile) {
+      const ext = coverFile.name.split(".").pop() || "jpg";
+      const path = `${userId}/${crypto.randomUUID()}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from("covers")
+        .upload(path, coverFile, { cacheControl: "3600" });
+      if (uploadError) {
+        console.error("cover upload failed:", uploadError);
+        setError(dbError("Nie udało się wgrać okładki", uploadError));
+        setIsSubmitting(false);
+        return;
+      }
+      coverUrl = supabase.storage.from("covers").getPublicUrl(path).data.publicUrl;
+    }
+
     const { data, error: insertError } = await supabase
       .from("projects")
       .insert({
@@ -71,6 +92,8 @@ export default function NewProjectPage() {
         phase,
         roles_needed: parseList(rolesNeeded),
         tags: parseList(tags),
+        cover_url: coverUrl,
+        video_url: videoUrl.trim() || null,
       })
       .select()
       .single();
@@ -102,7 +125,7 @@ export default function NewProjectPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-1 text-xl font-semibold text-stone-50">Wrzuć swój projekt</h1>
+      <h1 className="mb-1 font-display text-xl font-semibold text-stone-50">Dodaj projekt</h1>
       <p className="mb-8 text-sm text-stone-500">Krótko, konkretnie. Bez korpo-gadki.</p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -171,10 +194,40 @@ export default function NewProjectPage() {
           />
         </label>
 
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
+          Okładka (opcjonalnie — JPG/PNG, max 5 MB)
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const f = e.target.files?.[0] ?? null;
+              if (f && f.size > 5 * 1024 * 1024) {
+                setError("Okładka musi ważyć mniej niż 5 MB.");
+                return;
+              }
+              setError(null);
+              setCoverFile(f);
+            }}
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-400 file:mr-3 file:rounded-full file:border-0 file:bg-stone-800 file:px-3 file:py-1 file:text-xs file:text-stone-200"
+          />
+          <span className="text-stone-600">Bez okładki projekt dostanie automatyczny gradient.</span>
+        </label>
+
+        <label className="flex flex-col gap-1 text-xs text-stone-500">
+          Link do wideo (opcjonalnie — YouTube/Vimeo)
+          <input
+            type="url"
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            placeholder="https://youtube.com/watch?v=…"
+          />
+        </label>
+
         {error && <p className="text-xs text-danger">{error}</p>}
 
         <button type="submit" disabled={isSubmitting} className="btn-primary self-start">
-          {isSubmitting ? "Wrzucam…" : "Wrzuć projekt"}
+          {isSubmitting ? "Dodaję…" : "Dodaj projekt"}
         </button>
       </form>
     </main>

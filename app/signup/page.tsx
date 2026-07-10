@@ -50,7 +50,7 @@ export default function SignupPage() {
     // If email confirmation is required, Supabase returns a user with no
     // active session — send them to check their inbox instead of redirecting.
     if (data.session) {
-      router.push("/");
+      router.push("/projekty");
       router.refresh();
     } else {
       setCheckEmail(true);

@@ -11,7 +11,7 @@ type Mode = "password" | "magic-link";
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") || "/";
+  const next = searchParams.get("next") || "/projekty";
   const supabase = createClient();
 
   const [mode, setMode] = useState<Mode>("password");
