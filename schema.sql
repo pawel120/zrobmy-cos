@@ -11,10 +11,17 @@ create extension if not exists "pgcrypto";
 -- ----------------------------------------------------------------------------
 -- ENUM types
 -- ----------------------------------------------------------------------------
+-- Key names are legacy (pre-rebrand); UI labels: Pomysł / Budujemy /
+-- Walidujemy rynek / Szukamy finansowania / Działa.
+-- Existing databases: run
+--   alter type project_phase add value if not exists 'walidujemy';
+--   alter type project_phase add value if not exists 'dziala';
 create type project_phase as enum (
-  'luzna_rozkmina',      -- 'Luźna rozkmina'
-  'kodzimy_hackathon',   -- 'Kodzimy na hackathon'
-  'lecimy_po_hajs'       -- 'Lecimy po hajs'
+  'luzna_rozkmina',      -- 'Pomysł'
+  'kodzimy_hackathon',   -- 'Budujemy'
+  'walidujemy',          -- 'Walidujemy rynek'
+  'lecimy_po_hajs',      -- 'Szukamy finansowania'
+  'dziala'               -- 'Działa'
 );
 
 create type notification_type as enum (

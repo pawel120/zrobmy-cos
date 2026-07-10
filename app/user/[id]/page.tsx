@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: UserPageProps): Promise<Metad
   }
 
   const name = profile.display_name || profile.username;
-  const description = profile.bio || `${profile.faculty ?? "Student"} · 🔥 ${profile.hype_score} hype'u`;
+  const description = profile.bio || `${profile.faculty ?? "Twórca"} · 🔥 ${profile.hype_score} hype'u`;
 
   return {
     title: `${name} (@${profile.username}) — BuildTogether`,
@@ -96,7 +96,11 @@ export default async function UserProfilePage({ params }: UserPageProps) {
             <span>{typedProfile.hype_score}</span>
           </div>
           <NapiszButton targetUserId={typedProfile.id} currentUserId={authUser?.id ?? null} />
-          {authUser?.id !== typedProfile.id && (
+          {authUser?.id === typedProfile.id ? (
+            <a href="/settings" className="text-xs text-stone-500 hover:text-ogien">
+              Ustawienia
+            </a>
+          ) : (
             <ReportButton target={{ reportedProfileId: typedProfile.id }} currentUserId={authUser?.id ?? null} />
           )}
         </div>

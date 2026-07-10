@@ -21,14 +21,14 @@
     --secondary-foreground: 48 8% 98%;
     --muted: 20 7% 15%;
     --muted-foreground: 24 6% 64%;     /* #a8a29e stone-400 */
-    --accent: 16 100% 50%;             /* ogień #ff4500 — CTA + 🔥 + active */
+    --accent: 25 95% 53%;              /* ember #f97316 — CTA + 🔥 + active */
     --accent-foreground: 0 0% 0%;
     --destructive: 347 77% 50%;        /* róż #e11d48 — split from ogień (UX fix) */
     --destructive-foreground: 0 0% 100%;
     --border: 20 7% 15%;               /* #292524 stone-800 hairline, universal 1px line */
     --input: 20 7% 15%;
-    --ring: 16 100% 50%;               /* focus ring stays ogień */
-    --radius: 2px;                     /* was 0 — barely softened, keeps the edge */
+    --ring: 25 95% 53%;                /* focus ring stays ember */
+    --radius: 8px;                     /* soft skin: 8px controls, 12px cards (rounded-lg) */
   }
 
   html,
@@ -44,13 +44,13 @@
   }
 
   ::selection {
-    background-color: #ff450033;
-    color: #fafafa;
+    background-color: #f9731633;
+    color: #fafaf9;
   }
 
   /* Visible keyboard focus everywhere — never rely on default outline alone */
   :focus-visible {
-    outline: 2px solid #ff4500;
+    outline: 2px solid #f97316;
     outline-offset: 2px;
   }
 
@@ -75,18 +75,11 @@
     border-bottom: 1px solid #292524; /* stone-800 */
   }
 
-  /* Ogień accent surface — CTA / 🔥 / active states */
+  /* Ogień (ember) accent surface — CTA / 🔥 / active states */
   .accent-surface {
-    background-color: #ff450015;
-    border: 1px solid #ff450055;
-    color: #ff4500;
-  }
-
-  /* Fiolet — community / status / presence (rule R1: ~20% max) */
-  .community-surface {
-    background-color: #8b5cf61f;
-    border: 1px solid #8b5cf666;
-    color: #a78bfa;
+    background-color: #f9731615;
+    border: 1px solid #f9731655;
+    color: #f97316;
   }
 
   /* Róż — destructive only */
@@ -108,16 +101,11 @@
   }
 
   .card {
-    @apply rounded-sm border border-stone-800 bg-stone-900/40 p-4;
+    @apply rounded-lg border border-stone-800 bg-stone-900/40 p-4;
   }
 
   .tag {
-    @apply rounded-sm border border-stone-800 px-2 py-0.5 text-xs text-stone-400;
-  }
-
-  /* Fiolet status/phase tag — community colour (rule R2: fiolet = status) */
-  .tag-phase {
-    @apply rounded-sm border border-fiolet/40 bg-fiolet/10 px-2 py-0.5 text-xs text-fiolet;
+    @apply rounded-full border border-stone-800 px-2.5 py-0.5 text-xs text-stone-400;
   }
 }
 

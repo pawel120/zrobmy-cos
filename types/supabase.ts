@@ -481,7 +481,7 @@ export type Database = {
         | "join_request"
         | "new_message"
         | "system"
-      project_phase: "luzna_rozkmina" | "kodzimy_hackathon" | "lecimy_po_hajs"
+      project_phase: "luzna_rozkmina" | "kodzimy_hackathon" | "walidujemy" | "lecimy_po_hajs" | "dziala"
       report_status: "open" | "resolved" | "dismissed"
     }
     CompositeTypes: {
@@ -620,7 +620,7 @@ export const Constants = {
         "new_message",
         "system",
       ],
-      project_phase: ["luzna_rozkmina", "kodzimy_hackathon", "lecimy_po_hajs"],
+      project_phase: ["luzna_rozkmina", "kodzimy_hackathon", "walidujemy", "lecimy_po_hajs", "dziala"],
       report_status: ["open", "resolved", "dismissed"],
     },
   },

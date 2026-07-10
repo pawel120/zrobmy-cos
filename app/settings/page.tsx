@@ -151,6 +151,12 @@ export default function SettingsPage() {
     setIsSaving(false);
   }
 
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    router.push("/");
+    router.refresh();
+  }
+
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
     setPasswordError(null);
@@ -229,13 +235,13 @@ export default function SettingsPage() {
         </label>
 
         <label className="flex flex-col gap-1 text-xs text-stone-500">
-          Wydział
+          Czym się zajmujesz
           <input
             value={faculty}
             onChange={(e) => setFaculty(e.target.value)}
             maxLength={80}
             className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
-            placeholder="Np. Informatyka"
+            placeholder="Np. frontend, design, marketing"
           />
         </label>
 
@@ -312,6 +318,12 @@ export default function SettingsPage() {
             {isChangingPassword ? "Zmieniam…" : "Zmień hasło"}
           </button>
         </form>
+      </section>
+
+      <section className="hairline mt-10 pt-6">
+        <button onClick={handleLogout} className="text-sm text-stone-500 hover:text-danger">
+          Wyloguj się
+        </button>
       </section>
     </main>
   );

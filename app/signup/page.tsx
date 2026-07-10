@@ -105,7 +105,7 @@ export default function SignupPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
-            placeholder="ty@uczelnia.edu.pl"
+            placeholder="ty@email.com"
           />
         </label>
 

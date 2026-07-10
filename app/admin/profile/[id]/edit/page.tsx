@@ -159,7 +159,7 @@ export default function AdminEditProfilePage({ params }: AdminEditProfileProps) 
         </label>
 
         <label className="flex flex-col gap-1 text-xs text-stone-500">
-          Wydział
+          Czym się zajmujesz
           <input
             value={faculty}
             onChange={(e) => setFaculty(e.target.value)}

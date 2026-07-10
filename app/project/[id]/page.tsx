@@ -10,9 +10,11 @@ import { ReportButton } from "@/components/report-button";
 import type { Profile, Project } from "@/types/database";
 
 const PHASE_LABELS: Record<string, string> = {
-  luzna_rozkmina: "Luźna rozkmina",
-  kodzimy_hackathon: "Kodzimy na hackathon",
-  lecimy_po_hajs: "Lecimy po hajs",
+  luzna_rozkmina: "Pomysł",
+  kodzimy_hackathon: "Budujemy",
+  walidujemy: "Walidujemy rynek",
+  lecimy_po_hajs: "Szukamy finansowania",
+  dziala: "Działa",
 };
 
 interface ProjectPageProps {
@@ -105,7 +107,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     <main className="mx-auto max-w-2xl px-4 py-10">
       <section className="hairline pb-6">
         <div className="flex items-center justify-between">
-          <span className="tag-phase">{PHASE_LABELS[typedProject.phase]}</span>
+          <span className="tag">{PHASE_LABELS[typedProject.phase]}</span>
           {isOwner && (
             <Link href={`/project/${typedProject.id}/edit`} className="text-xs text-stone-500 hover:text-ogien">
               Edytuj

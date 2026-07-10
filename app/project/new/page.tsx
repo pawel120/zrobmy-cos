@@ -6,9 +6,11 @@ import { createClient } from "@/lib/supabase/client";
 import type { ProjectPhase } from "@/types/database";
 
 const PHASE_OPTIONS: { value: ProjectPhase; label: string }[] = [
-  { value: "luzna_rozkmina", label: "Luźna rozkmina" },
-  { value: "kodzimy_hackathon", label: "Kodzimy na hackathon" },
-  { value: "lecimy_po_hajs", label: "Lecimy po hajs" },
+  { value: "luzna_rozkmina", label: "Pomysł" },
+  { value: "kodzimy_hackathon", label: "Budujemy" },
+  { value: "walidujemy", label: "Walidujemy rynek" },
+  { value: "lecimy_po_hajs", label: "Szukamy finansowania" },
+  { value: "dziala", label: "Działa" },
 ];
 
 function parseList(raw: string): string[] {

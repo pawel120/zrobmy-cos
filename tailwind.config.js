@@ -60,19 +60,13 @@ module.exports = {
           muted: "#a8a29e",    // stone-400
           dim: "#78716c",      // stone-500
         },
-        // Ogień — the single warm accent: primary CTA + 🔥 mechanic + active + focus
+        // Ogień (ember) — the single warm accent: primary CTA + 🔥 mechanic + active + focus.
+        // Softened from neon #ff4500 to ember #f97316 to match the rounded, warmer skin.
         ogien: {
-          DEFAULT: "#ff4500",
-          hover: "#ff5a1f",
-          soft: "#ff450022",
-          ring: "#ff450055",
-        },
-        // Fiolet — community / status / presence, held to ~20% (rule R1 in DESIGN.md)
-        fiolet: {
-          DEFAULT: "#a78bfa",
-          solid: "#7c3aed",
-          soft: "#8b5cf622",
-          ring: "#8b5cf655",
+          DEFAULT: "#f97316",
+          hover: "#fb923c",
+          soft: "#f9731622",
+          ring: "#f9731655",
         },
         // Róż — destructive ONLY, split out from ogień so "Usuń" ≠ reward
         danger: {
@@ -83,15 +77,16 @@ module.exports = {
         },
       },
       fontFamily: {
-        display: ["var(--font-jetbrains-mono)", "monospace"],
+        // Display switched from mono to Space Grotesk — mono said "terminal",
+        // the repositioned brand says "modern builder". Mono stays for numbers.
+        display: ["var(--font-space-grotesk)", "sans-serif"],
         body: ["var(--font-inter)", "sans-serif"],
         mono: ["var(--font-jetbrains-mono)", "monospace"],
       },
       borderRadius: {
-        // App is intentionally corner-square everywhere; shadcn components
-        // read `--radius` so this stays a single source of truth.
-        lg: "var(--radius)",
-        md: "var(--radius)",
+        // Soft skin: 8px controls (--radius), 10px mid, 12px cards.
+        lg: "12px",
+        md: "10px",
         sm: "var(--radius)",
         none: "0px",
         DEFAULT: "var(--radius)",

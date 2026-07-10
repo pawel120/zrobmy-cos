@@ -11,6 +11,7 @@ export function NavBar() {
   const pathname = usePathname();
 
   const [userId, setUserId] = useState<string | null | undefined>(undefined);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
@@ -24,12 +25,18 @@ export function NavBar() {
       setUserId(user?.id ?? null);
 
       if (user) {
-        const { count } = await supabase
-          .from("notifications")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", user.id)
-          .eq("is_read", false);
-        if (isMounted) setUnreadCount(count ?? 0);
+        const [{ count }, { data: me }] = await Promise.all([
+          supabase
+            .from("notifications")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", user.id)
+            .eq("is_read", false),
+          supabase.from("profiles").select("is_admin").eq("id", user.id).single(),
+        ]);
+        if (isMounted) {
+          setUnreadCount(count ?? 0);
+          setIsAdmin(Boolean(me?.is_admin));
+        }
       }
     }
 
@@ -71,12 +78,6 @@ export function NavBar() {
     if (pathname === "/notifications") setUnreadCount(0);
   }, [pathname]);
 
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    router.push("/");
-    router.refresh();
-  }
-
   const linkClass = (href: string) =>
     pathname === href ? "text-ogien" : "text-stone-500 hover:text-stone-300";
 
@@ -88,34 +89,43 @@ export function NavBar() {
         </Link>
 
         <div className="flex items-center gap-4">
-          <Link href="/students" className={linkClass("/students")}>
-            Ludzie
-          </Link>
-
           {userId === undefined ? null : userId ? (
             <>
+              <Link href="/" className={linkClass("/")}>
+                Projekty
+              </Link>
+              <Link href="/students" className={linkClass("/students")}>
+                Ludzie
+              </Link>
               <Link href="/messages" className={linkClass("/messages")}>
                 Wiadomości
               </Link>
               <Link href="/notifications" className={`relative ${linkClass("/notifications")}`}>
                 Powiadomienia
                 {unreadCount > 0 && (
-                  <span className="absolute -right-3 -top-1.5 flex h-4 min-w-4 items-center justify-center bg-ogien px-1 text-[10px] font-semibold text-black">
+                  <span className="absolute -right-3 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-ogien px-1 text-[10px] font-semibold text-black">
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
               </Link>
-              <Link href="/settings" className={linkClass("/settings")}>
-                Ustawienia
+              <Link href={`/user/${userId}`} className={linkClass(`/user/${userId}`)}>
+                Profil
               </Link>
-              <button onClick={handleLogout} className="text-stone-500 hover:text-ogien">
-                Wyloguj
-              </button>
+              {isAdmin && (
+                <Link href="/admin" className={linkClass("/admin")}>
+                  Admin
+                </Link>
+              )}
             </>
           ) : (
-            <Link href="/login" className={linkClass("/login")}>
-              Zaloguj się
-            </Link>
+            <>
+              <Link href="/login" className={linkClass("/login")}>
+                Zaloguj się
+              </Link>
+              <Link href="/signup" className="btn-primary !px-3 !py-1.5">
+                Załóż konto
+              </Link>
+            </>
           )}
         </div>
       </nav>
