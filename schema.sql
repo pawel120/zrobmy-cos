@@ -685,7 +685,17 @@ create policy "profiles_select_public"
 create policy "profiles_update_self"
   on public.profiles for update
   using (id = auth.uid())
-  with check (id = auth.uid() and is_admin = (select is_admin from public.profiles where id = auth.uid()));
+  -- The three "col = (select col ...)" clauses pin moderation/ranking columns to
+  -- their stored value: a self-update may change bio/skills/etc. but can never
+  -- flip is_admin (privilege escalation), lift its own is_shadowbanned (evade
+  -- moderation), or inflate hype_score (rank manipulation). Admins go through
+  -- the separate admin_full_profiles policy, which has no such restriction.
+  with check (
+    id = auth.uid()
+    and is_admin = (select is_admin from public.profiles where id = auth.uid())
+    and is_shadowbanned = (select is_shadowbanned from public.profiles where id = auth.uid())
+    and hype_score = (select hype_score from public.profiles where id = auth.uid())
+  );
 
 -- projects: public read (non-shadowbanned), owner can insert/update/delete
 create policy "projects_select_public"
@@ -699,7 +709,15 @@ create policy "projects_insert_own"
 create policy "projects_update_own"
   on public.projects for update
   using (owner_id = auth.uid())
-  with check (owner_id = auth.uid());
+  -- Owner may edit their project's content but not lift its own is_shadowbanned
+  -- (moderation evasion) nor rewrite the denormalized fire_count (rank
+  -- manipulation); both are pinned to the stored row. Admin_full_projects
+  -- bypasses this for moderators.
+  with check (
+    owner_id = auth.uid()
+    and is_shadowbanned = (select p2.is_shadowbanned from public.projects p2 where p2.id = projects.id)
+    and fire_count = (select p2.fire_count from public.projects p2 where p2.id = projects.id)
+  );
 
 create policy "projects_delete_own"
   on public.projects for delete

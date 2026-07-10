@@ -7,7 +7,12 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get("code");
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
-  const next = searchParams.get("next") || "/";
+  // Only allow same-origin relative paths as the post-auth redirect. A bare
+  // "/foo" is fine; "//evil.com" and "https://evil.com" (protocol-relative or
+  // absolute) would send the freshly-authenticated user off-site, so fall back
+  // to "/".
+  const nextParam = searchParams.get("next") || "/";
+  const next = nextParam.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/";
 
   const supabase = createClient();
 

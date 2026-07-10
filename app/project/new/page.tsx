@@ -61,6 +61,21 @@ export default function NewProjectPage() {
       setError("Opisz projekt trochę szerzej (min. 10 znaków).");
       return;
     }
+    const trimmedVideo = videoUrl.trim();
+    if (trimmedVideo) {
+      // Only http(s) links are ever rendered/embedded — reject javascript:,
+      // data:, etc. here so a bad scheme never reaches the DB in the first
+      // place (the project page also guards at render time).
+      let ok = false;
+      try {
+        const proto = new URL(trimmedVideo).protocol;
+        ok = proto === "http:" || proto === "https:";
+      } catch {}
+      if (!ok) {
+        setError("Link do wideo musi zaczynać się od http:// lub https://");
+        return;
+      }
+    }
 
     setIsSubmitting(true);
     setError(null);
@@ -93,7 +108,7 @@ export default function NewProjectPage() {
         roles_needed: parseList(rolesNeeded),
         tags: parseList(tags),
         cover_url: coverUrl,
-        video_url: videoUrl.trim() || null,
+        video_url: trimmedVideo || null,
       })
       .select()
       .single();

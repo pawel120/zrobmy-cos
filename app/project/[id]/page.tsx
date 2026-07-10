@@ -41,6 +41,18 @@ function embedUrl(raw: string): string | null {
   return null;
 }
 
+// Guards the fallback <a href>: only http(s) links may reach the DOM. Without
+// this, a stored `javascript:`/`data:` video_url renders as a clickable link
+// that executes in the viewer's session (React does not sanitize href schemes).
+function safeHref(raw: string): string | null {
+  try {
+    const u = new URL(raw);
+    return u.protocol === "http:" || u.protocol === "https:" ? raw : null;
+  } catch {
+    return null;
+  }
+}
+
 // Projects get shared into group chats and hackathon Discords far more than
 // they get browsed to directly — without this, every share is a bare URL.
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
@@ -162,16 +174,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 title={`Wideo projektu ${typedProject.title}`}
               />
             </div>
-          ) : (
+          ) : safeHref(typedProject.video_url) ? (
             <a
-              href={typedProject.video_url}
+              href={safeHref(typedProject.video_url)!}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-ogien underline"
             >
               Zobacz wideo projektu
             </a>
-          )}
+          ) : null}
         </section>
       )}
 
