@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Flame, Users, Clock } from "lucide-react";
+import { SEEKING_LABELS } from "@/lib/seeking";
 import type { Profile, Project } from "@/types/database";
 
 // DB enum keys are legacy (pre-rebrand) — only the labels changed.
@@ -67,6 +68,19 @@ export function ProjectCard({ project, owner, teamCount }: ProjectCardProps) {
       <div className="p-4">
         <h3 className="font-display text-base font-semibold text-stone-50">{project.title}</h3>
         <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-stone-400">{project.description}</p>
+
+        {project.seeking?.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {project.seeking.map((s) => (
+              <span
+                key={s}
+                className="rounded-full border border-ogien/40 bg-ogien/10 px-2.5 py-0.5 text-xs text-ogien"
+              >
+                {SEEKING_LABELS[s] ?? s}
+              </span>
+            ))}
+          </div>
+        )}
 
         {project.roles_needed.length > 0 && (
           <div className="mt-3 flex flex-wrap items-center gap-1.5">

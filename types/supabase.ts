@@ -349,6 +349,7 @@ export type Database = {
           owner_id: string
           phase: Database["public"]["Enums"]["project_phase"]
           roles_needed: string[]
+          seeking: string[]
           tags: string[]
           title: string
           updated_at: string
@@ -364,6 +365,7 @@ export type Database = {
           owner_id: string
           phase?: Database["public"]["Enums"]["project_phase"]
           roles_needed?: string[]
+          seeking?: string[]
           tags?: string[]
           title: string
           updated_at?: string
@@ -379,6 +381,7 @@ export type Database = {
           owner_id?: string
           phase?: Database["public"]["Enums"]["project_phase"]
           roles_needed?: string[]
+          seeking?: string[]
           tags?: string[]
           title?: string
           updated_at?: string
@@ -465,6 +468,7 @@ export type Database = {
           owner_id: string
           phase: Database["public"]["Enums"]["project_phase"]
           roles_needed: string[]
+          seeking: string[]
           tags: string[]
           title: string
           updated_at: string

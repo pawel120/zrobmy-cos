@@ -62,6 +62,7 @@ create index idx_profiles_skills_want on public.profiles using gin (skills_want)
 -- Existing databases: run
 --   alter table public.projects add column if not exists cover_url text;
 --   alter table public.projects add column if not exists video_url text;
+--   alter table public.projects add column if not exists seeking text[] not null default '{}';
 create table public.projects (
   id              uuid primary key default gen_random_uuid(),
   owner_id        uuid not null references public.profiles(id) on delete cascade,
@@ -70,6 +71,7 @@ create table public.projects (
   phase           project_phase not null default 'luzna_rozkmina',
   roles_needed    text[] not null default '{}',
   tags            text[] not null default '{}',
+  seeking         text[] not null default '{}',  -- czego szuka: ekipy / pierwszy_klient / placacy_klienci / finansowanie / feedback
   cover_url       text,                          -- Storage `covers` bucket; null = generated gradient
   video_url       text,                          -- YouTube/Vimeo link, embedded on the project page
   fire_count      integer not null default 0,   -- denormalized total fires

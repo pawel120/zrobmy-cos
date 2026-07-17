@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { dbError } from "@/lib/utils";
+import { SEEKING_OPTIONS } from "@/lib/seeking";
 import type { Project, ProjectPhase } from "@/types/database";
 
 const PHASE_OPTIONS: { value: ProjectPhase; label: string }[] = [
@@ -35,6 +36,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
   const [phase, setPhase] = useState<ProjectPhase>("luzna_rozkmina");
   const [rolesNeeded, setRolesNeeded] = useState("");
   const [tags, setTags] = useState("");
+  const [seeking, setSeeking] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -90,6 +92,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
       setPhase(data.phase);
       setRolesNeeded(data.roles_needed.join(", "));
       setTags(data.tags.join(", "));
+      setSeeking(data.seeking ?? []);
     }
 
     load();
@@ -119,6 +122,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
         title: trimmedTitle,
         description: trimmedDescription,
         phase,
+        seeking,
         roles_needed: parseList(rolesNeeded),
         tags: parseList(tags),
       })
@@ -226,8 +230,32 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
           </div>
         </fieldset>
 
+        <fieldset className="flex flex-col gap-2 text-xs text-stone-500">
+          <legend className="mb-1">Czego szukacie</legend>
+          <div className="flex flex-wrap gap-2">
+            {SEEKING_OPTIONS.map((opt) => (
+              <button
+                type="button"
+                key={opt.value}
+                onClick={() =>
+                  setSeeking((prev) =>
+                    prev.includes(opt.value) ? prev.filter((v) => v !== opt.value) : [...prev, opt.value]
+                  )
+                }
+                className={
+                  seeking.includes(opt.value)
+                    ? "rounded-full border border-ogien/60 bg-ogien/10 px-3 py-1 text-sm text-ogien"
+                    : "rounded-full border border-stone-800 px-3 py-1 text-sm text-stone-400 hover:border-stone-600"
+                }
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
         <label className="flex flex-col gap-1 text-xs text-stone-500">
-          Kogo szukacie (oddziel przecinkami)
+          Kogo szukacie do zespołu (oddziel przecinkami)
           <input
             value={rolesNeeded}
             onChange={(e) => setRolesNeeded(e.target.value)}

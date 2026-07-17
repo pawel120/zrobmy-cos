@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ProjectCard } from "@/components/project-card";
+import { SEEKING_OPTIONS } from "@/lib/seeking";
 import type { Profile, Project } from "@/types/database";
 
 interface FeedPageProps {
-  searchParams: { sort?: string };
+  searchParams: { sort?: string; seek?: string };
 }
 
 type OwnerLite = Pick<Profile, "id" | "username" | "display_name" | "avatar_url">;
@@ -15,6 +16,7 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
     data: { user },
   } = await supabase.auth.getUser();
   const sort = searchParams.sort === "nowe" ? "nowe" : "popularne";
+  const seek = SEEKING_OPTIONS.some((o) => o.value === searchParams.seek) ? searchParams.seek : null;
 
   let projects: Project[] = [];
   if (sort === "popularne") {
@@ -29,6 +31,8 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
       .limit(30);
     projects = (data ?? []) as Project[];
   }
+
+  if (seek) projects = projects.filter((p) => p.seeking?.includes(seek));
 
   // Enrich cards in two batch queries instead of N+1 per card:
   // owners for the author line, accepted join_requests for the team size.
@@ -83,6 +87,32 @@ export default async function FeedPage({ searchParams }: FeedPageProps) {
         >
           Nowe
         </Link>
+      </div>
+
+      <div className="mb-6 flex flex-wrap gap-2 text-xs">
+        <Link
+          href={`/projekty?sort=${sort}`}
+          className={
+            !seek
+              ? "rounded-full border border-ogien/50 bg-ogien/10 px-3 py-1 text-ogien"
+              : "rounded-full border border-stone-800 px-3 py-1 text-stone-400 hover:border-stone-600"
+          }
+        >
+          Wszystkie
+        </Link>
+        {SEEKING_OPTIONS.map((opt) => (
+          <Link
+            key={opt.value}
+            href={`/projekty?sort=${sort}&seek=${opt.value}`}
+            className={
+              seek === opt.value
+                ? "rounded-full border border-ogien/50 bg-ogien/10 px-3 py-1 text-ogien"
+                : "rounded-full border border-stone-800 px-3 py-1 text-stone-400 hover:border-stone-600"
+            }
+          >
+            {opt.label}
+          </Link>
+        ))}
       </div>
 
       {projects.length === 0 ? (
