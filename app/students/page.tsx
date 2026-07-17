@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import Link from "next/link";
 import { Flame } from "lucide-react";
-import { ProfileLink } from "@/components/profile-link";
 import type { Profile } from "@/types/database";
 import type { ProfilesResponse } from "@/app/api/profiles/route";
 
@@ -68,13 +68,13 @@ export default function StudentsPage() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Szukaj po nazwie…"
-          className="min-w-[160px] flex-1 border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+          className="min-w-[160px] flex-1 input"
         />
         <input
           value={skill}
           onChange={(e) => setSkill(e.target.value)}
           placeholder="Umiejętność, np. React"
-          className="min-w-[160px] flex-1 border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+          className="min-w-[160px] flex-1 input"
         />
         <select
           value={sort}
@@ -93,26 +93,55 @@ export default function StudentsPage() {
       ) : profiles.length === 0 ? (
         <p className="text-sm text-stone-600">Nikt nie pasuje do tych filtrów.</p>
       ) : (
-        <ul className="divide-y divide-stone-900">
+        <div className="flex flex-col gap-3">
           {profiles.map((p) => (
-            <li key={p.id} className="flex items-center justify-between py-3">
-              <div>
-                <ProfileLink profile={p} />
-                {p.faculty && <p className="mt-0.5 pl-8 text-xs text-stone-600">{p.faculty}</p>}
+            <Link
+              key={p.id}
+              href={`/user/${p.id}`}
+              className="block rounded-lg border border-stone-800 bg-stone-900 p-4 transition-colors hover:border-stone-600"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-stone-800 text-xs text-stone-300">
+                    {p.avatar_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={p.avatar_url} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      p.username.slice(0, 2).toUpperCase()
+                    )}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="font-medium text-stone-100">{p.display_name || p.username}</p>
+                    <p className="text-xs text-stone-500">
+                      @{p.username}
+                      {p.faculty ? ` · ${p.faculty}` : ""}
+                    </p>
+                  </div>
+                </div>
+                <span className="flex shrink-0 items-center gap-1 text-xs text-ogien">
+                  <Flame className="h-3.5 w-3.5" aria-hidden /> {p.hype_score}
+                </span>
               </div>
-              <span className="flex items-center gap-1 text-xs text-ogien">
-                <Flame className="h-3.5 w-3.5" aria-hidden /> {p.hype_score}
-              </span>
-            </li>
+              {p.skills_have.length > 0 && (
+                <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                  <span className="text-[10px] uppercase tracking-wide text-stone-600">Potrafi</span>
+                  {p.skills_have.slice(0, 5).map((s) => (
+                    <span key={s} className="tag">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </Link>
           ))}
-        </ul>
+        </div>
       )}
 
       <div className="mt-6 flex items-center justify-between text-sm">
         <button
           onClick={() => setPage((p) => Math.max(1, p - 1))}
           disabled={page === 1 || isLoading}
-          className="border border-stone-800 px-3 py-1.5 text-stone-400 hover:border-stone-600 disabled:opacity-30"
+          className="btn-ghost !px-3 !py-1.5 disabled:opacity-30"
         >
           Poprzednia
         </button>
@@ -120,7 +149,7 @@ export default function StudentsPage() {
         <button
           onClick={() => setPage((p) => p + 1)}
           disabled={!hasMore || isLoading}
-          className="border border-stone-800 px-3 py-1.5 text-stone-400 hover:border-stone-600 disabled:opacity-30"
+          className="btn-ghost !px-3 !py-1.5 disabled:opacity-30"
         >
           Następna
         </button>

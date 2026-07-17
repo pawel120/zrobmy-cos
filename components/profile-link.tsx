@@ -17,7 +17,7 @@ export function ProfileLink({ profile, size = "md" }: ProfileLinkProps) {
       className="group inline-flex items-center gap-2 no-underline"
     >
       <span
-        className={`flex ${avatarSize} shrink-0 items-center justify-center overflow-hidden rounded-none border border-stone-800 bg-stone-900 font-mono text-stone-400`}
+        className={`flex ${avatarSize} shrink-0 items-center justify-center overflow-hidden rounded-full border border-stone-800 bg-stone-900 text-stone-400`}
       >
         {profile.avatar_url ? (
           // eslint-disable-next-line @next/next/no-img-element

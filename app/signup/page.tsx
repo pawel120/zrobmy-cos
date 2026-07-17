@@ -90,7 +90,7 @@ export default function SignupPage() {
             required
             value={username}
             onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
             placeholder="mikolaj_koduje"
             minLength={3}
             maxLength={24}
@@ -104,7 +104,7 @@ export default function SignupPage() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
             placeholder="ty@email.com"
           />
         </label>
@@ -116,7 +116,7 @@ export default function SignupPage() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
             placeholder="min. 8 znaków"
             minLength={8}
           />

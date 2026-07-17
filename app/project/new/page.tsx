@@ -69,11 +69,24 @@ export default function NewProjectPage() {
     // storage RLS policies) so its URL can go into the insert directly.
     let coverUrl: string | null = null;
     if (coverFile) {
-      const ext = coverFile.name.split(".").pop() || "jpg";
+      // Whitelist the extension from the MIME type — a filename with spaces,
+      // Polish chars, or no dot produced a broken Storage key and "Failed to fetch".
+      const MIME_EXT: Record<string, string> = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp",
+        "image/gif": "gif",
+      };
+      const ext = MIME_EXT[coverFile.type];
+      if (!ext) {
+        setError("Okładka musi być JPG, PNG, WEBP albo GIF.");
+        setIsSubmitting(false);
+        return;
+      }
       const path = `${userId}/${crypto.randomUUID()}.${ext}`;
       const { error: uploadError } = await supabase.storage
         .from("covers")
-        .upload(path, coverFile, { cacheControl: "3600" });
+        .upload(path, coverFile, { cacheControl: "3600", contentType: coverFile.type });
       if (uploadError) {
         console.error("cover upload failed:", uploadError);
         setError(dbError("Nie udało się wgrać okładki", uploadError));
@@ -136,7 +149,7 @@ export default function NewProjectPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             maxLength={120}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
             placeholder="Np. Appka do dzielenia rachunków na wyjazdach"
           />
         </label>
@@ -149,7 +162,7 @@ export default function NewProjectPage() {
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
             maxLength={2000}
-            className="resize-none border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="resize-none input"
             placeholder="Co budujecie, na jakim jesteście etapie, dlaczego to fajne."
           />
         </label>
@@ -179,7 +192,7 @@ export default function NewProjectPage() {
           <input
             value={rolesNeeded}
             onChange={(e) => setRolesNeeded(e.target.value)}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
             placeholder="Frontend, Designer, ML"
           />
         </label>
@@ -189,7 +202,7 @@ export default function NewProjectPage() {
           <input
             value={tags}
             onChange={(e) => setTags(e.target.value)}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
             placeholder="AI, fintech, mobile"
           />
         </label>
@@ -219,7 +232,7 @@ export default function NewProjectPage() {
             type="url"
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
             placeholder="https://youtube.com/watch?v=…"
           />
         </label>

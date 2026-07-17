@@ -128,7 +128,7 @@ export default function AdminEditProfilePage({ params }: AdminEditProfileProps) 
       </p>
 
       <section className="hairline mb-6 flex items-center gap-4 pb-6">
-        <div className="flex h-16 w-16 items-center justify-center overflow-hidden border border-stone-800 bg-stone-900 font-mono text-lg text-stone-400">
+        <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-stone-800 bg-stone-900 text-lg text-stone-400">
           {avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
@@ -154,7 +154,7 @@ export default function AdminEditProfilePage({ params }: AdminEditProfileProps) 
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             maxLength={60}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
           />
         </label>
 
@@ -164,7 +164,7 @@ export default function AdminEditProfilePage({ params }: AdminEditProfileProps) 
             value={faculty}
             onChange={(e) => setFaculty(e.target.value)}
             maxLength={80}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
           />
         </label>
 
@@ -175,7 +175,7 @@ export default function AdminEditProfilePage({ params }: AdminEditProfileProps) 
             onChange={(e) => setBio(e.target.value)}
             rows={4}
             maxLength={500}
-            className="resize-none border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="resize-none input"
           />
         </label>
 
@@ -184,7 +184,7 @@ export default function AdminEditProfilePage({ params }: AdminEditProfileProps) 
           <input
             value={skillsHave}
             onChange={(e) => setSkillsHave(e.target.value)}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
           />
         </label>
 
@@ -193,7 +193,7 @@ export default function AdminEditProfilePage({ params }: AdminEditProfileProps) 
           <input
             value={skillsWant}
             onChange={(e) => setSkillsWant(e.target.value)}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
           />
         </label>
 

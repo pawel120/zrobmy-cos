@@ -983,6 +983,32 @@ create policy "news_admin_all"
   with check (public.is_admin());
 
 -- ============================================================================
+-- applications — landing-page "wstęp za artefakt" gate. Anonymous visitors
+-- submit an artifact URL + one sentence; inserts go through the service-role
+-- API route, so RLS grants nothing to anon/authenticated. Admin reviews.
+-- ============================================================================
+create table if not exists public.applications (
+  id            uuid primary key default gen_random_uuid(),
+  artifact_url  text not null check (char_length(artifact_url) between 8 and 500),
+  pitch         text not null check (char_length(pitch) between 3 and 280),
+  email         text not null check (char_length(email) between 5 and 254),
+  status        text not null default 'pending' check (status in ('pending', 'accepted', 'rejected')),
+  review_note   text,
+  reviewed_at   timestamptz,
+  created_at    timestamptz not null default now()
+);
+
+create index if not exists applications_status_idx on public.applications (status, created_at desc);
+
+alter table public.applications enable row level security;
+
+drop policy if exists "applications_admin_all" on public.applications;
+create policy "applications_admin_all"
+  on public.applications for all
+  using (public.is_admin())
+  with check (public.is_admin());
+
+-- ============================================================================
 -- Realtime: expose tables needed for live UI updates
 -- ============================================================================
 alter publication supabase_realtime add table public.messages;

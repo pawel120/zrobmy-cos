@@ -190,7 +190,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             maxLength={120}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
           />
         </label>
 
@@ -202,7 +202,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
             maxLength={2000}
-            className="resize-none border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="resize-none input"
           />
         </label>
 
@@ -231,7 +231,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
           <input
             value={rolesNeeded}
             onChange={(e) => setRolesNeeded(e.target.value)}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
           />
         </label>
 
@@ -240,7 +240,7 @@ export default function EditProjectPage({ params }: EditProjectPageProps) {
           <input
             value={tags}
             onChange={(e) => setTags(e.target.value)}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
           />
         </label>
 

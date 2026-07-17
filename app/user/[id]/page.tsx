@@ -68,7 +68,7 @@ export default async function UserProfilePage({ params }: UserPageProps) {
       {/* ---- Header ---------------------------------------------------- */}
       <section className="hairline flex items-start justify-between gap-4 pb-6">
         <div className="flex items-start gap-4">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center border border-stone-800 bg-stone-900 font-mono text-lg text-stone-400">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-stone-800 bg-stone-900 text-lg text-stone-400">
             {typedProfile.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -98,8 +98,8 @@ export default async function UserProfilePage({ params }: UserPageProps) {
           </div>
           <NapiszButton targetUserId={typedProfile.id} currentUserId={authUser?.id ?? null} />
           {authUser?.id === typedProfile.id ? (
-            <a href="/settings" className="text-xs text-stone-500 hover:text-ogien">
-              Ustawienia
+            <a href="/settings" className="btn-ghost !px-3 !py-1.5 !text-xs">
+              Edytuj profil
             </a>
           ) : (
             <ReportButton target={{ reportedProfileId: typedProfile.id }} currentUserId={authUser?.id ?? null} />

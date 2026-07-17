@@ -63,7 +63,7 @@ export function NewsAdmin({ items }: { items: NewsItem[] }) {
           onChange={(e) => setTitle(e.target.value)}
           maxLength={120}
           placeholder="Tytuł aktualności"
-          className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+          className="input"
         />
         <textarea
           value={body}
@@ -71,7 +71,7 @@ export function NewsAdmin({ items }: { items: NewsItem[] }) {
           rows={3}
           maxLength={1000}
           placeholder="Treść (opcjonalnie)"
-          className="resize-none border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+          className="resize-none input"
         />
         {error && <p className="text-xs text-danger">{error}</p>}
         <button type="submit" disabled={isPending} className="btn-primary self-start">

@@ -191,11 +191,11 @@ export default function SettingsPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-1 text-xl font-semibold text-stone-50">Ustawienia profilu</h1>
+      <h1 className="mb-1 font-display text-xl font-semibold text-stone-50">Edytuj profil</h1>
       <p className="mb-8 text-sm text-stone-500">@{profile.username}</p>
 
       <section className="hairline mb-6 flex items-center gap-4 pb-6">
-        <div className="flex h-16 w-16 items-center justify-center overflow-hidden border border-stone-800 bg-stone-900 font-mono text-lg text-stone-400">
+        <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-stone-800 bg-stone-900 text-lg text-stone-400">
           {avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
@@ -230,7 +230,7 @@ export default function SettingsPage() {
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             maxLength={60}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
           />
         </label>
 
@@ -240,7 +240,7 @@ export default function SettingsPage() {
             value={faculty}
             onChange={(e) => setFaculty(e.target.value)}
             maxLength={80}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
             placeholder="Np. frontend, design, marketing"
           />
         </label>
@@ -252,7 +252,7 @@ export default function SettingsPage() {
             onChange={(e) => setBio(e.target.value)}
             rows={4}
             maxLength={500}
-            className="resize-none border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="resize-none input"
           />
         </label>
 
@@ -261,7 +261,7 @@ export default function SettingsPage() {
           <input
             value={skillsHave}
             onChange={(e) => setSkillsHave(e.target.value)}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
             placeholder="React, Figma, SQL"
           />
         </label>
@@ -271,7 +271,7 @@ export default function SettingsPage() {
           <input
             value={skillsWant}
             onChange={(e) => setSkillsWant(e.target.value)}
-            className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+            className="input"
             placeholder="Backend, Marketing"
           />
         </label>
@@ -284,8 +284,10 @@ export default function SettingsPage() {
         </button>
       </form>
 
-      <section className="hairline mt-10 pt-6">
-        <h2 className="mb-4 text-sm font-semibold text-stone-50">Zmiana hasła</h2>
+      <section className="hairline mt-12 pt-8">
+        <h2 className="mb-1 font-display text-lg font-semibold text-stone-50">Ustawienia konta</h2>
+        <p className="mb-5 text-sm text-stone-500">Hasło i sesja — osobno od profilu.</p>
+        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-stone-500">Zmiana hasła</h3>
         <form onSubmit={handleChangePassword} className="flex flex-col gap-5">
           <label className="flex flex-col gap-1 text-xs text-stone-500">
             Nowe hasło
@@ -295,7 +297,7 @@ export default function SettingsPage() {
               onChange={(e) => setNewPassword(e.target.value)}
               minLength={8}
               autoComplete="new-password"
-              className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+              className="input"
             />
           </label>
 
@@ -307,7 +309,7 @@ export default function SettingsPage() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               minLength={8}
               autoComplete="new-password"
-              className="border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+              className="input"
             />
           </label>
 

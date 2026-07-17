@@ -115,6 +115,12 @@
   .tag {
     @apply rounded-full border border-stone-800 px-2.5 py-0.5 text-xs text-stone-400;
   }
+
+  /* One input style for the whole app — replaces ~30 copies of the same string */
+  .input {
+    @apply w-full rounded-md border border-stone-800 bg-stone-950 px-3 py-2 text-sm
+      text-stone-100 outline-none transition-colors placeholder:text-stone-600 focus:border-ogien;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

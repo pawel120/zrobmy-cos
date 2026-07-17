@@ -67,7 +67,7 @@ export function JoinRequestButton({ projectId, currentUserId, alreadyRequested }
         rows={2}
         maxLength={300}
         placeholder="Kilka słów o tym, co wnosisz (opcjonalnie)"
-        className="resize-none border border-stone-800 bg-stone-950 px-3 py-2 text-sm text-stone-100 outline-none focus:border-ogien"
+        className="resize-none input"
       />
       <div className="flex items-center gap-2">
         <button onClick={handleSubmit} disabled={isSubmitting} className="btn-primary">
