@@ -72,8 +72,8 @@ export default function SignupPage() {
 
   return (
     <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-sm flex-col justify-center px-4">
-      <h1 className="mb-1 text-xl font-semibold text-stone-50">BuildTogether</h1>
-      <p className="mb-6 text-sm text-stone-500">Załóż konto i znajdź ekipę.</p>
+      <h1 className="mb-1 font-display text-xl font-semibold text-stone-50">Załóż konto</h1>
+      <p className="mb-6 text-sm text-stone-500">Dołącz i znajdź zespół do swojego projektu.</p>
 
       <GoogleSignInButton />
 
@@ -132,7 +132,7 @@ export default function SignupPage() {
       <p className="mt-8 text-sm text-stone-500">
         Masz już konto?{" "}
         <Link href="/login" className="text-stone-100 underline hover:text-ogien">
-          Zaloguj się
+          Przejdź do logowania
         </Link>
       </p>
     </main>

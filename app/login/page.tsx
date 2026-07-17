@@ -66,8 +66,8 @@ export default function LoginPage() {
 
   return (
     <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-sm flex-col justify-center px-4">
-      <h1 className="mb-1 text-xl font-semibold text-stone-50">Wejdź do gry</h1>
-      <p className="mb-6 text-sm text-stone-500">Zaloguj się i zobacz, co się kroi.</p>
+      <h1 className="mb-1 font-display text-xl font-semibold text-stone-50">Zaloguj się</h1>
+      <p className="mb-6 text-sm text-stone-500">Wróć do swoich projektów i wiadomości.</p>
 
       <GoogleSignInButton />
 
@@ -138,7 +138,7 @@ export default function LoginPage() {
       <p className="mt-8 text-sm text-stone-500">
         Nie masz konta?{" "}
         <Link href="/signup" className="text-stone-100 underline hover:text-ogien">
-          Zrób sobie jedno
+          Załóż konto
         </Link>
       </p>
     </main>
